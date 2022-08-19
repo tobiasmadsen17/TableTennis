@@ -1,4 +1,4 @@
-import { PaginationExample } from './examples/paginationExample';
+import { PaginationExample } from './table/paginationTable';
 function App() {
   return (
     <div
