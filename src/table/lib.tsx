@@ -10,6 +10,10 @@ export interface Player {
   name: string;
 }
 
+export interface PlayerProps {
+  players: Player[];
+}
+
 export const BasicColumns: SuperTableColumn<Player>[] = [
   {
     title: 'Player',

@@ -5,8 +5,8 @@ import { Modal } from '../modal/Modal';
 export const PaginationExample = () => {
   const [players, setPlayers] = useState([]);
 
-  const fetchPlayers = () => {
-    fetch('https://api.ckal.dk/table-tennis/players')
+  const fetchPlayers = async () => {
+    await fetch('https://api.ckal.dk/table-tennis/players')
       .then((response) => {
         return response.json();
       })
@@ -14,9 +14,10 @@ export const PaginationExample = () => {
         setPlayers(data);
       });
   };
+
   useEffect(() => {
     fetchPlayers();
-  }, []);
+  });
 
   return (
     <div>
