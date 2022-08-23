@@ -1,20 +1,24 @@
-import { SuperTable } from '../supertable/superTable';
+import { SuperTable } from './supertable/superTable';
 import { BasicColumns } from './lib';
 import { useEffect, useState } from 'react';
-import { Modal } from '../modal/Modal';
+import { Modal } from '../Modal';
+import axios from 'axios';
+import { Collapse } from '../Collapse';
 export const PaginationExample = () => {
   const [players, setPlayers] = useState([]);
 
   const fetchPlayers = async () => {
-    await fetch('https://api.ckal.dk/table-tennis/players')
+    await axios({
+      method: 'GET',
+      url: 'https://api.ckal.dk/table-tennis/players',
+    })
       .then((response) => {
-        return response.json();
+        return response.data;
       })
       .then((data) => {
         setPlayers(data);
       });
   };
-
   useEffect(() => {
     fetchPlayers();
   });
@@ -29,7 +33,9 @@ export const PaginationExample = () => {
         itemsPerPage={10}
         removePaginationBottom
       />
-      <Modal players={players} />
+      <Modal players={players} matchType="Single" />
+      <Modal players={players} matchType="Double" />
+      <Collapse />
     </div>
   );
 };

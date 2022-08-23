@@ -1,4 +1,4 @@
-import { SuperTableColumn } from '../supertable/superTable';
+import { SuperTableColumn } from './supertable/superTable';
 
 export interface Player {
   _id: string;
@@ -12,6 +12,7 @@ export interface Player {
 
 export interface PlayerProps {
   players: Player[];
+  matchType: string;
 }
 
 export const BasicColumns: SuperTableColumn<Player>[] = [

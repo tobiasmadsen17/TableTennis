@@ -1,5 +1,4 @@
-import { PlayerProps } from '../table/lib';
-import { Player } from '../table/lib';
+import { PlayerProps, Player } from './table/lib';
 import { useState, ChangeEvent } from 'react';
 import axios from 'axios';
 export const Modal = (props: PlayerProps) => {
@@ -8,7 +7,6 @@ export const Modal = (props: PlayerProps) => {
       {value.email}
     </option>
   ));
-
   interface matchData {
     numPointsToWin: number;
     gameOfMultipleSets: boolean;
@@ -22,7 +20,7 @@ export const Modal = (props: PlayerProps) => {
     };
   }
 
-  const [state, setState] = useState<matchData>({
+  const [matchState, setMatchState] = useState<matchData>({
     numPointsToWin: 11,
     gameOfMultipleSets: true,
     participantsA: {
@@ -35,80 +33,66 @@ export const Modal = (props: PlayerProps) => {
     },
   });
 
-  const setEmails = (target: string, event: any) => {
-    if (target === 'A') {
-      setState((current) => ({
-        ...current,
-        participantsA: {
-          ...current.participantsA,
-          emails: [event],
-        },
-      }));
-    } else {
-      setState((current) => ({
-        ...current,
-        participantsB: {
-          ...current.participantsB,
-          emails: [event],
-        },
-      }));
-    }
+  const setEmails = (target: string, event: string) => {
+    target === 'A'
+      ? setMatchState((current) => ({
+          ...current,
+          participantsA: {
+            ...current.participantsA,
+            emails: [event],
+          },
+        }))
+      : setMatchState((current) => ({
+          ...current,
+          participantsB: {
+            ...current.participantsB,
+            emails: [event],
+          },
+        }));
   };
-  const setNumOfWonSet = (target: string, event: any) => {
-    if (target === 'A') {
-      setState((current) => ({
-        ...current,
-        participantsA: {
-          ...current.participantsA,
-          numSetsWon: event,
-        },
-      }));
-    } else {
-      setState((current) => ({
-        ...current,
-        participantsB: {
-          ...current.participantsB,
-          numSetsWon: event,
-        },
-      }));
-    }
+  const setNumOfWonSet = (target: string, event: number) => {
+    target === 'A'
+      ? setMatchState((current) => ({
+          ...current,
+          participantsA: {
+            ...current.participantsA,
+            numSetsWon: event,
+          },
+        }))
+      : setMatchState((current) => ({
+          ...current,
+          participantsB: {
+            ...current.participantsB,
+            numSetsWon: event,
+          },
+        }));
   };
-  const submit = async (matchForSubmit: matchData) => {
+  const submitMatch = async (matchForSubmit: matchData) => {
     await axios({
-      method: 'post',
+      method: 'POST',
       url: 'https://api.ckal.dk/table-tennis/session',
       data: matchForSubmit,
     });
-    document.getElementById('close')?.click();
+    document.getElementById(`close${props.matchType}`)?.click();
   };
 
   return (
     <div className="mt-3">
       <button
-        type="button"
-        className="btn btn-primary"
+        className="btn btn-outline-primary"
         data-bs-toggle="modal"
-        data-bs-target="#addMatch"
+        data-bs-target={'#' + props.matchType}
       >
-        Add match results
+        {props.matchType} Match
       </button>
-      <h5>
-        Wanna join the league? Create a new{' '}
-        <a href="https://www.ckal.dk" target="_blank" rel="noreferrer">
-          user
-        </a>
-      </h5>
-      <div className="modal fade" id="addMatch" aria-hidden="true">
-        <div className="modal-dialog">
+      <div className="modal fade" id={props.matchType} aria-hidden="true">
+        <div className="modal-dialog modal-dialog-centered">
           <div className="modal-content">
             <div className="modal-header">
-              <h5 className="modal-title" id="exampleModalLabel">
-                Add Match Results
-              </h5>
+              <h5 className="modal-title">Add {props.matchType} Match Results</h5>
               <button
-                type="button"
-                id="close"
                 className="btn-close"
+                id={'close' + props.matchType}
                 data-bs-dismiss="modal"
                 aria-label="Close"
               ></button>
@@ -130,9 +114,9 @@ export const Modal = (props: PlayerProps) => {
                 type="number"
                 min="0"
                 className="form-control mt-3 mb-3"
-                placeholder="Player One won Sets"
+                placeholder="Player One Won Sets"
                 onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                  setNumOfWonSet('A', event.target.value);
+                  setNumOfWonSet('A', event.target.value as unknown as number);
                 }}
               ></input>
               <select
@@ -153,12 +137,12 @@ export const Modal = (props: PlayerProps) => {
                 className="form-control mt-3 mb-3"
                 placeholder="Player Two won Sets"
                 onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                  setNumOfWonSet('B', event.target.value);
+                  setNumOfWonSet('B', event.target.value as unknown as number);
                 }}
               ></input>
             </div>
             <div className="modal-footer">
-              <button onClick={() => submit(state)} type="button" className="btn btn-primary">
+              <button onClick={() => submitMatch(matchState)} className="btn btn-primary">
                 Submit
               </button>
             </div>
