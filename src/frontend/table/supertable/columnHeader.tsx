@@ -55,6 +55,7 @@ export function ColumnHeader<T>(props: ColumnHeaderProps<T>) {
           userSelect: 'none',
           textAlign: props.column.titleAlign,
           width: '100%',
+          marginTop: 1,
         }}
         title={props.column.title}
       >
@@ -64,7 +65,7 @@ export function ColumnHeader<T>(props: ColumnHeaderProps<T>) {
         <div
           style={{
             cursor: 'pointer',
-            marginTop: '2px',
+            marginBottom: '-5px',
           }}
         >
           {props.sortInfo?.col !== props.column.title ? null : props.sortInfo.direction ===
