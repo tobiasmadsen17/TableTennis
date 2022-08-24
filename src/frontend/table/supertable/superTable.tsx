@@ -1,4 +1,8 @@
-import React, { useMemo, useState, useEffect, useRef } from 'react';
+import React from 'react';
+import { useMemo } from 'react';
+import { useState } from 'react';
+import { useEffect } from 'react';
+import { useRef } from 'react';
 import { ColumnHeader } from './columnHeader';
 import { Row } from './row';
 import { RowGrid } from './rowGrid';
@@ -33,7 +37,9 @@ export interface SuperTableProps<T> {
   stickyHeaderContainerHeight?: number;
   disableAutoScrollOnBottomPageChange?: boolean;
   removeLastRowBottomBorder?: boolean;
-  onRowClick?: ((clickedRow: T) => React.ReactNode) | ((clickedRow: T) => Promise<React.ReactNode>);
+  onRowClick?:
+    | ((clickedRow: T) => React.ReactNode | void)
+    | ((clickedRow: T) => Promise<React.ReactNode | void>);
   onRowEditSave?: ((row: T) => void) | ((row: T) => Promise<void>);
   canSave?(editedRow: T): boolean;
   onRefresh?(): void;
@@ -352,6 +358,7 @@ export function SuperTable<T>(props: SuperTableProps<T>) {
                   : {}),
                 height: '100%',
                 borderBottom: `2px solid ${LIGHT_GRAY}`,
+                marginBottom: 2,
               }}
             >
               <input

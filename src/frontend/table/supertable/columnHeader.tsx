@@ -17,13 +17,15 @@ export function ColumnHeader<T>(props: ColumnHeaderProps<T>) {
         alignItems: 'center',
         justifyContent: 'space-between',
         padding: '6px 12px',
-        height: 'calc(100% - 12px)',
+        height: '100%',
+        WebkitBoxSizing: 'border-box',
+        MozBoxSizing: 'border-box',
+        boxSizing: 'border-box',
         cursor: props.setSortInfo ? 'pointer' : undefined,
         borderTop: props.sticky ? `1px solid ${LIGHT_GRAY}` : undefined,
         borderBottom: `2px solid ${LIGHT_GRAY}`,
-        ...(props.sticky
-          ? { position: 'sticky', background: 'white', top: '0px', zIndex: 1 }
-          : {}),
+        marginBottom: 2,
+        ...(props.sticky ? { position: 'sticky', background: 'white', top: '0px', zIndex: 1 } : {}),
       }}
       className="supertable-columnheader"
       onClick={
@@ -38,10 +40,7 @@ export function ColumnHeader<T>(props: ColumnHeaderProps<T>) {
               } else {
                 props.setSortInfo!({
                   col: props.column.title,
-                  direction:
-                    props.sortInfo.direction === 'ascending'
-                      ? 'descending'
-                      : 'ascending',
+                  direction: props.sortInfo.direction === 'ascending' ? 'descending' : 'ascending',
                 });
               }
             }
@@ -68,8 +67,8 @@ export function ColumnHeader<T>(props: ColumnHeaderProps<T>) {
             marginTop: '2px',
           }}
         >
-          {props.sortInfo?.col !== props.column.title ? null : props.sortInfo
-              .direction === 'ascending' ? (
+          {props.sortInfo?.col !== props.column.title ? null : props.sortInfo.direction ===
+            'ascending' ? (
             <AiOutlineCaretUp />
           ) : (
             <AiOutlineCaretDown />

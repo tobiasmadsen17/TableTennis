@@ -22,7 +22,7 @@ interface RowProps<T> {
   renderBottomLine: boolean;
   getRowKey(r: T): string;
   sethoveredrowkey?(key: string): void;
-  onRowClick?: (() => React.ReactNode) | (() => Promise<React.ReactNode>);
+  onRowClick?: (() => React.ReactNode | void) | (() => Promise<React.ReactNode | void>);
   onRowEditSave?: ((row: T) => void) | ((row: T) => Promise<void>);
   canSave?(editedRow: T): boolean;
 }
@@ -50,7 +50,10 @@ export function Row<T>(props: RowProps<T>) {
     display: 'flex',
     alignItems: col?.alignVertically || 'center',
     justifyContent: col?.align,
-    height: 'calc(100% - 8px)',
+    height: '100%',
+    WebkitBoxSizing: 'border-box',
+    MozBoxSizing: 'border-box',
+    boxSizing: 'border-box',
     minWidth: '0px',
     background: props.isSelected
       ? '#abd7fd'
@@ -71,7 +74,9 @@ export function Row<T>(props: RowProps<T>) {
       setIsWorking(!hadContent);
       const content = await props.onRowClick();
       setIsWorking(false);
-      if (!hadContent) {
+      if (!content) {
+        setExpandContent(undefined);
+      } else if (!hadContent) {
         setExpandContent(content);
       }
     }
