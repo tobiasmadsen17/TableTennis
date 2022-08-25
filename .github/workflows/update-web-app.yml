@@ -1,0 +1,11 @@
+name: update-web-app
+
+on:
+  push:
+    branches: ['main']
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - run: curl --request POST "http://ckal.dk:10001/update/tabletennis" --header "Authorization:${{ secrets.UPDATE_TOKEN }}"
