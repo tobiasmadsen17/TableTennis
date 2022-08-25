@@ -1,9 +1,10 @@
 interface collapseProps {
   header: string;
-  message: string;
-  externalLink?: string;
+  subheader: string;
+  linkHref?: string;
+  linkMessage?: string;
 }
-export const Collapse = ({ header, message, externalLink }: collapseProps) => {
+export const Collapse = ({ header, subheader, linkHref, linkMessage }: collapseProps) => {
   return (
     <div>
       <div id="collapseExample">
@@ -11,9 +12,9 @@ export const Collapse = ({ header, message, externalLink }: collapseProps) => {
           <h5>
             {header} <br />{' '}
             <small>
-              {message}{' '}
-              <a href={externalLink} target="_blank" rel="noreferrer">
-                user
+              {subheader}{' '}
+              <a href={linkHref} target="_blank" rel="noreferrer">
+                {linkMessage}
               </a>
             </small>
           </h5>

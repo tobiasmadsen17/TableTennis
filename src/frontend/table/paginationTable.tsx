@@ -44,8 +44,9 @@ export const PaginationExample = () => {
       <Modal players={players} matchType="Register" reload={updateTable} />
       <Collapse
         header="Wanna join the league?"
-        message="Head over and create a new"
-        externalLink="https://www.CKAL.dk"
+        subheader="Head over and create a new"
+        linkHref="https://www.CKAL.dk"
+        linkMessage="user"
       />
     </div>
   );
