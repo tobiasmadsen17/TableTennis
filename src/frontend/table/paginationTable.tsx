@@ -15,6 +15,9 @@ export const PaginationExample = () => {
     await axios({
       method: 'GET',
       url: 'https://api.ckal.dk/table-tennis/players',
+      headers: {
+        'x-api-key': window.location.host === 'tabletennis.ckal.dk' ? 'hej' : '',
+      },
     })
       .then((response) => {
         return response.data;
