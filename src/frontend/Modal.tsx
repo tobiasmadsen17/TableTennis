@@ -84,7 +84,7 @@ export const Modal = (props: PlayerProps, test: boolean) => {
       });
   };
   return (
-    <div className="mt-3">
+    <div className="mt-1">
       <button
         className="btn btn-outline-primary"
         data-bs-toggle="modal"
