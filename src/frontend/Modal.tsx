@@ -1,14 +1,15 @@
 import { PlayerProps, Player } from './table/lib';
 import { useState, ChangeEvent } from 'react';
+import { Alert } from './Alert';
 import axios from 'axios';
-export const Modal = (props: PlayerProps) => {
+export const Modal = (props: PlayerProps, test: boolean) => {
   const listItems = props.players.map((value: Player) => (
     <option key={value._id} value={value.email}>
       {value.email}
     </option>
   ));
   interface matchData {
-    numPointsToWin: number;
+    totalPoints: number;
     gameOfMultipleSets: boolean;
     participantsA: {
       emails: string[];
@@ -19,9 +20,8 @@ export const Modal = (props: PlayerProps) => {
       numSetsWon: number;
     };
   }
-
   const [matchState, setMatchState] = useState<matchData>({
-    numPointsToWin: 11,
+    totalPoints: 22,
     gameOfMultipleSets: true,
     participantsA: {
       emails: [],
@@ -32,21 +32,21 @@ export const Modal = (props: PlayerProps) => {
       numSetsWon: 0,
     },
   });
-
-  const setEmails = (target: string, event: string) => {
+  const [alert, alertHidden] = useState(true);
+  const setEmails = (target: string, event: any) => {
     target === 'A'
       ? setMatchState((current) => ({
           ...current,
           participantsA: {
             ...current.participantsA,
-            emails: [event],
+            emails: Array.from(event.target.selectedOptions, (option: any) => option.value),
           },
         }))
       : setMatchState((current) => ({
           ...current,
           participantsB: {
             ...current.participantsB,
-            emails: [event],
+            emails: Array.from(event.target.selectedOptions, (option: any) => option.value),
           },
         }));
   };
@@ -72,10 +72,17 @@ export const Modal = (props: PlayerProps) => {
       method: 'POST',
       url: 'https://api.ckal.dk/table-tennis/session',
       data: matchForSubmit,
-    });
-    document.getElementById(`close${props.matchType}`)?.click();
+    })
+      .then((response) => {
+        console.log(response);
+        props.reload(true);
+        document.getElementById(`close${props.matchType}`)?.click();
+      })
+      .catch(() => {
+        props.reload(false);
+        alertHidden(false);
+      });
   };
-
   return (
     <div className="mt-3">
       <button
@@ -89,7 +96,7 @@ export const Modal = (props: PlayerProps) => {
         <div className="modal-dialog modal-dialog-centered">
           <div className="modal-content">
             <div className="modal-header">
-              <h5 className="modal-title">Add {props.matchType} Match Results</h5>
+              <h5 className="modal-title">{props.matchType} Match Results</h5>
               <button
                 className="btn-close"
                 id={'close' + props.matchType}
@@ -97,54 +104,61 @@ export const Modal = (props: PlayerProps) => {
                 aria-label="Close"
               ></button>
             </div>
-            <div className="modal-body">
+
+            <div className="modal-body needs-validation">
+              <Alert alertMessage="Please fill out all values" hidden={alert} />
+              <h5>Team A</h5>
               <select
                 className="form-select mt-3"
-                aria-label="Default select example"
+                multiple
+                required
+                aria-label="multiple select example"
                 onChange={(event: ChangeEvent<HTMLSelectElement>) => {
-                  setEmails('A', event.target.value);
+                  setEmails('A', event);
                 }}
               >
-                <option selected disabled>
-                  Select Player One
-                </option>
                 {listItems}
               </select>
+              <div className="form-text">Ctrl + Click to select multiple participants</div>
               <input
                 type="number"
                 min="0"
                 className="form-control mt-3 mb-3"
-                placeholder="Player One Won Sets"
+                placeholder="Won Sets"
+                required
                 onChange={(event: ChangeEvent<HTMLInputElement>) => {
                   setNumOfWonSet('A', event.target.value as unknown as number);
                 }}
               ></input>
+              <hr />
+              <h5>Team B</h5>
               <select
                 className="form-select mt-3"
+                multiple
+                required
                 aria-label="Default select example"
                 onChange={(event: ChangeEvent<HTMLSelectElement>) => {
-                  setEmails('B', event.target.value);
+                  setEmails('B', event);
                 }}
               >
-                <option selected disabled>
-                  Select Player Two
-                </option>
                 {listItems}
               </select>
+              <div className="form-text">Ctrl + Click to select multiple participants</div>
               <input
                 type="number"
                 min="0"
+                required
                 className="form-control mt-3 mb-3"
-                placeholder="Player Two won Sets"
+                placeholder="Won Sets"
                 onChange={(event: ChangeEvent<HTMLInputElement>) => {
                   setNumOfWonSet('B', event.target.value as unknown as number);
                 }}
               ></input>
-            </div>
-            <div className="modal-footer">
-              <button onClick={() => submitMatch(matchState)} className="btn btn-primary">
-                Submit
-              </button>
+              <div className="modal-footer">
+                <button onClick={() => submitMatch(matchState)} className="btn btn-primary">
+                  Submit
+                </button>
+              </div>
             </div>
           </div>
         </div>

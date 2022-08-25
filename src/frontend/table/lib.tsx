@@ -13,6 +13,7 @@ export interface Player {
 export interface PlayerProps {
   players: Player[];
   matchType: string;
+  reload: Function;
 }
 
 export const BasicColumns: SuperTableColumn<Player>[] = [
