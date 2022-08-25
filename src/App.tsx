@@ -3,7 +3,7 @@ function App() {
   return (
     <div className="container">
       <div className="row">
-        <div className="col">
+        <div className="col-12">
           <PaginationExample />
         </div>
       </div>
