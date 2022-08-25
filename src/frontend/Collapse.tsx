@@ -1,15 +1,18 @@
-import React from 'react';
-
-export const Collapse = () => {
+interface collapseProps {
+  header: string;
+  message: string;
+  externalLink?: string;
+}
+export const Collapse = ({ header, message, externalLink }: collapseProps) => {
   return (
     <div>
       <div id="collapseExample">
         <div className="card card-body mt-3">
           <h5>
-            Wanna join the league? <br />{' '}
+            {header} <br />{' '}
             <small>
-              Head over and create a new{' '}
-              <a href="https://www.ckal.dk" target="_blank" rel="noreferrer">
+              {message}{' '}
+              <a href={externalLink} target="_blank" rel="noreferrer">
                 user
               </a>
             </small>

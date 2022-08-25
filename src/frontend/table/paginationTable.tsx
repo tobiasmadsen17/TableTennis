@@ -42,7 +42,11 @@ export const PaginationExample = () => {
         removePaginationBottom
       />
       <Modal players={players} matchType="Register" reload={updateTable} />
-      <Collapse />
+      <Collapse
+        header="Wanna join the league?"
+        message="Head over and create a new"
+        externalLink="https://www.CKAL.dk"
+      />
     </div>
   );
 };
