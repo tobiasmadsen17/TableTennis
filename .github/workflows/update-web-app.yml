@@ -8,4 +8,4 @@ jobs:
   notify:
     runs-on: ubuntu-latest
     steps:
-      - run: curl --request POST "http://ckal.dk:10001/update/TableTennis" --header "Authorization:${{ secrets.UPDATE_TOKEN }} --fail"
+      - run: curl --fail --request POST "http://ckal.dk:10001/update/TableTennis" --header "Authorization:${{ secrets.UPDATE_TOKEN }}"
