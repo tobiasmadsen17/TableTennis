@@ -1,10 +1,11 @@
 interface collapseProps {
-  header: string;
-  subheader: string;
+  header?: string;
+  subheader?: string;
   linkHref?: string;
   linkMessage?: string;
+  modal?: any;
 }
-export const Collapse = ({ header, subheader, linkHref, linkMessage }: collapseProps) => {
+export const Collapse = ({ header, subheader, linkHref, linkMessage, modal }: collapseProps) => {
   return (
     <div>
       <div id="collapseExample">
@@ -16,6 +17,7 @@ export const Collapse = ({ header, subheader, linkHref, linkMessage }: collapseP
               <a href={linkHref} target="_blank" rel="noreferrer">
                 {linkMessage}
               </a>
+              {modal}
             </small>
           </h5>
         </div>

@@ -32,22 +32,40 @@ export const PaginationExample = () => {
   }, []);
 
   return (
-    <div>
-      <h1>Super Table Tennis Ranking</h1>
-      <SuperTable
-        rows={players}
-        columns={BasicColumns}
-        rowKey={'_id'}
-        itemsPerPage={10}
-        removePaginationBottom
-      />
-      <Modal players={players} matchType="Register" reload={updateTable} />
-      <Collapse
-        header="Wanna join the league?"
-        subheader="Head over and create a new"
-        linkHref="https://www.CKAL.dk"
-        linkMessage="user"
-      />
+    <div className="container">
+      <div className="row mt-5">
+        <div className="col-12">
+          <h2>Super Table Tennis Ranking</h2>
+        </div>
+      </div>
+      <div className="row">
+        <div className="col-12">
+          <SuperTable
+            rows={players}
+            columns={BasicColumns}
+            rowKey={'_id'}
+            itemsPerPage={10}
+            removePaginationBottom
+          />
+        </div>
+      </div>
+      <div className="row">
+        <div className="col-6">
+          <Collapse
+            header="Played a match?"
+            subheader="- Register the results here"
+            modal={<Modal players={players} matchType="Register" reload={updateTable} />}
+          />
+        </div>
+        <div className="col-6">
+          <Collapse
+            header="Wanna join the league?"
+            subheader="- Head over and create a new"
+            linkHref="https://www.CKAL.dk"
+            linkMessage="user"
+          />
+        </div>
+      </div>
     </div>
   );
 };
