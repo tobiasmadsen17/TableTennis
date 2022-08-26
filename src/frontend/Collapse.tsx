@@ -1,23 +1,33 @@
 interface collapseProps {
   header: string;
+  message: string;
   subheader: string;
+  submessage: string;
+  id: string;
   linkHref?: string;
-  linkMessage?: string;
   modal?: any;
 }
-export const Collapse = ({ header, subheader, linkHref, linkMessage, modal }: collapseProps) => {
+export const Collapse = ({
+  header,
+  message,
+  subheader,
+  submessage,
+  id,
+  linkHref,
+  modal,
+}: collapseProps) => {
   return (
     <div>
-      <div id="collapseExample">
+      <div id={header}>
         <div className="card card-body mt-3">
-          <div className="accordion accordion-flush" id="accordionFlushExample">
+          <div className="accordion accordion-flush" id={id}>
             <div className="accordion-item">
-              <h2 className="accordion-header" id="flush-headingOne">
+              <h2 className="accordion-header">
                 <button
                   className="accordion-button collapsed"
                   type="button"
                   data-bs-toggle="collapse"
-                  data-bs-target="#flush-collapseOne"
+                  data-bs-target={'#flush-collapseOne' + id}
                   aria-expanded="false"
                   aria-controls="flush-collapseOne"
                 >
@@ -25,14 +35,13 @@ export const Collapse = ({ header, subheader, linkHref, linkMessage, modal }: co
                 </button>
               </h2>
               <div
-                id="flush-collapseOne"
+                id={'flush-collapseOne' + id}
                 className="accordion-collapse collapse"
-                aria-labelledby="flush-headingOne"
-                data-bs-parent="#accordionFlushExample"
+                data-bs-parent={'#' + id}
               >
                 <div className="accordion-body">
                   <h5 className="mb-3">
-                    <small>Register the results here and climb the ladder</small>
+                    <small>{message}</small>
                   </h5>
                   {modal}
                 </div>
@@ -44,7 +53,7 @@ export const Collapse = ({ header, subheader, linkHref, linkMessage, modal }: co
                   className="accordion-button collapsed"
                   type="button"
                   data-bs-toggle="collapse"
-                  data-bs-target="#flush-collapseTwo"
+                  data-bs-target={'#flush-collapseTwo' + id}
                   aria-expanded="false"
                   aria-controls="flush-collapseTwo"
                 >
@@ -52,26 +61,28 @@ export const Collapse = ({ header, subheader, linkHref, linkMessage, modal }: co
                 </button>
               </h2>
               <div
-                id="flush-collapseTwo"
+                id={'flush-collapseTwo' + id}
                 className="accordion-collapse collapse"
                 aria-labelledby="flush-headingTwo"
-                data-bs-parent="#accordionFlushExample"
+                data-bs-parent={'#' + id}
               >
                 <div className="accordion-body">
                   <h5 className="mb-3">
                     <small>
-                      Head over and create a user!
+                      {subheader}
                       <br />
                     </small>
                   </h5>
-                  <a
-                    className="btn btn-outline-primary"
-                    href={linkHref}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    Sign up here
-                  </a>
+                  {linkHref !== undefined && (
+                    <a
+                      className="btn btn-outline-primary"
+                      href={linkHref}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      Sign up
+                    </a>
+                  )}
                 </div>
               </div>
             </div>
