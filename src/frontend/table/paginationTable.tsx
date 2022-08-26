@@ -38,7 +38,7 @@ export const PaginationExample = () => {
     <div className="container">
       <div className="row mt-5">
         <div className="col-lg-12 col-md-auto">
-          <h2>Super Table Tennis Ranking</h2>
+          <h4 className="display-4">Super Table Tennis Ranking</h4>
         </div>
       </div>
       <div className="row">
@@ -50,22 +50,17 @@ export const PaginationExample = () => {
             itemsPerPage={10}
             removePaginationBottom
           />
+          <hr />
         </div>
       </div>
       <div className="row">
         <div className="col-lg-6 col-md-auto">
           <Collapse
             header="Played a match?"
-            subheader="- Register the results here"
-            modal={<Modal players={players} matchType="Register" reload={updateTable} />}
-          />
-        </div>
-        <div className="col-lg-6 col-md-auto">
-          <Collapse
-            header="Wanna join the league?"
-            subheader="- Head over and create a new"
+            subheader="Wanna join the league?"
             linkHref="https://www.CKAL.dk"
             linkMessage="user"
+            modal={<Modal players={players} matchType="Register" reload={updateTable} />}
           />
         </div>
       </div>

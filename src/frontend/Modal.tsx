@@ -98,16 +98,6 @@ export const Modal = (props: PlayerProps, test: boolean) => {
       <div className="modal fade" id={props.matchType} aria-hidden="true">
         <div className="modal-dialog modal-dialog-centered">
           <div className="modal-content">
-            <div className="modal-header">
-              <h5 className="modal-title">{props.matchType} Match Results</h5>
-              <button
-                className="btn-close"
-                id={'close' + props.matchType}
-                data-bs-dismiss="modal"
-                aria-label="Close"
-              ></button>
-            </div>
-
             <div className="modal-body needs-validation">
               <Alert alertMessage={alertMessage} hidden={alert} />
               <h5>Team A</h5>
@@ -122,18 +112,24 @@ export const Modal = (props: PlayerProps, test: boolean) => {
               >
                 {listItems}
               </select>
-              <div className="form-text">Ctrl + Click to select multiple participants</div>
-              <input
-                type="number"
-                min="0"
-                className="form-control mt-3 mb-3"
-                placeholder="Won Sets"
-                required
-                onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                  setNumOfWonSet('A', event.target.value as unknown as number);
-                }}
-              ></input>
-              <hr />
+              <div className="form-text">
+                <p>
+                  <em>Ctrl + Click to select multiple</em>
+                </p>
+              </div>
+              <div className="form-floating mb-3">
+                <input
+                  type="number"
+                  min="0"
+                  className="form-control mt-3 mb-3"
+                  placeholder="Won Sets"
+                  required
+                  onChange={(event: ChangeEvent<HTMLInputElement>) => {
+                    setNumOfWonSet('A', event.target.value as unknown as number);
+                  }}
+                ></input>
+                <label htmlFor="floatingInput">Amount of won sets</label>
+              </div>
               <h5>Team B</h5>
               <select
                 className="form-select mt-3"
@@ -146,18 +142,34 @@ export const Modal = (props: PlayerProps, test: boolean) => {
               >
                 {listItems}
               </select>
-              <div className="form-text">Ctrl + Click to select multiple participants</div>
-              <input
-                type="number"
-                min="0"
-                required
-                className="form-control mt-3 mb-3"
-                placeholder="Won Sets"
-                onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                  setNumOfWonSet('B', event.target.value as unknown as number);
-                }}
-              ></input>
+              <div className="form-text">
+                <p>
+                  <em>Ctrl + Click to select multiple</em>
+                </p>
+              </div>
+              <div className="form-floating mb-3">
+                <input
+                  type="number"
+                  min="0"
+                  className="form-control mt-3 mb-3"
+                  placeholder="Won Sets"
+                  required
+                  onChange={(event: ChangeEvent<HTMLInputElement>) => {
+                    setNumOfWonSet('B', event.target.value as unknown as number);
+                  }}
+                ></input>
+                <label htmlFor="floatingInput">Amount of won sets</label>
+              </div>
               <div className="modal-footer">
+                <button
+                  type="button"
+                  id={'close' + props.matchType}
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                  className="btn btn-outline-primary"
+                >
+                  Close
+                </button>
                 <button onClick={() => submitMatch(matchState)} className="btn btn-primary">
                   Submit
                 </button>
