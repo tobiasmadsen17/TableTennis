@@ -13,11 +13,11 @@ export const Modal = (props: PlayerProps, test: boolean) => {
     gameOfMultipleSets: boolean;
     participantsA: {
       emails: string[];
-      numSetsWon: number;
+      numSetsWon: number | string;
     };
     participantsB: {
       emails: string[];
-      numSetsWon: number;
+      numSetsWon: number | string;
     };
   }
   const [matchState, setMatchState] = useState<matchData>({
@@ -25,14 +25,16 @@ export const Modal = (props: PlayerProps, test: boolean) => {
     gameOfMultipleSets: true,
     participantsA: {
       emails: [],
-      numSetsWon: 0,
+      numSetsWon: '',
     },
     participantsB: {
       emails: [],
-      numSetsWon: 0,
+      numSetsWon: '',
     },
   });
   const [alert, alertHidden] = useState(true);
+  const [alertMessage, setAlertMessage] = useState('');
+
   const setEmails = (target: string, event: any) => {
     target === 'A'
       ? setMatchState((current) => ({
@@ -68,17 +70,18 @@ export const Modal = (props: PlayerProps, test: boolean) => {
         }));
   };
   const submitMatch = async (matchForSubmit: matchData) => {
+    console.log(matchForSubmit.participantsA.numSetsWon);
     await axios({
       method: 'POST',
       url: 'https://api.ckal.dk/table-tennis/session',
       data: matchForSubmit,
     })
-      .then((response) => {
-        console.log(response);
+      .then(() => {
         props.reload(true);
         document.getElementById(`close${props.matchType}`)?.click();
       })
-      .catch(() => {
+      .catch((response) => {
+        setAlertMessage(response.response.data);
         props.reload(false);
         alertHidden(false);
       });
@@ -106,7 +109,7 @@ export const Modal = (props: PlayerProps, test: boolean) => {
             </div>
 
             <div className="modal-body needs-validation">
-              <Alert alertMessage="Please fill out all values" hidden={alert} />
+              <Alert alertMessage={alertMessage} hidden={alert} />
               <h5>Team A</h5>
               <select
                 className="form-select mt-3"

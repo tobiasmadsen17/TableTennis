@@ -1,6 +1,6 @@
 interface collapseProps {
-  header?: string;
-  subheader?: string;
+  header: string;
+  subheader: string;
   linkHref?: string;
   linkMessage?: string;
   modal?: any;
