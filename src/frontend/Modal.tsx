@@ -2,12 +2,8 @@ import { PlayerProps, Player } from './table/lib';
 import { useState, ChangeEvent } from 'react';
 import { Alert } from './Alert';
 import axios from 'axios';
+import { ListRender } from './ListRender';
 export const Modal = (props: PlayerProps) => {
-  const listItems = props.players.map((value: Player) => (
-    <option key={value._id} value={value.email}>
-      {value.email}
-    </option>
-  ));
   interface matchData {
     totalPoints: number;
     gameOfMultipleSets: boolean;
@@ -32,18 +28,28 @@ export const Modal = (props: PlayerProps) => {
       numSetsWon: '',
     },
   });
-  const renderMailsA = matchState.participantsA.emails.map((item, index) => (
-    <li className="list-group-item" key={index}>
-      {item}
-    </li>
-  ));
-  const renderMailsB = matchState.participantsB.emails.map((item, index) => (
-    <li className="list-group-item" key={index}>
-      {item}
-    </li>
+  const listItems = props.players.map((value: Player) => (
+    <option key={value.email} value={value.email}>
+      {value.email}
+    </option>
   ));
   const [alert, alertHidden] = useState(true);
   const [alertMessage, setAlertMessage] = useState('');
+
+  const removeParticipant = (player: string) => {
+    var array = [...matchState.participantsA.emails];
+    var index = array.indexOf(player);
+    if (index !== -1) {
+      array.splice(index, 1);
+      setMatchState((current) => ({
+        ...current,
+        participantsA: {
+          ...current.participantsA,
+          emails: array,
+        },
+      }));
+    }
+  };
 
   const setMails = (event: any, target: string) => {
     let value = event.target.value;
@@ -123,24 +129,32 @@ export const Modal = (props: PlayerProps) => {
             <div className="modal-body needs-validation">
               <Alert alertMessage={alertMessage} hidden={alert} />
               <h5>Team A</h5>
-              <input
-                className="form-control"
-                list="datalistOptions"
-                id="DataListA"
-                placeholder="Search player"
-                onChange={(event: any) => {
-                  setMails(event, 'A');
-                }}
-              ></input>
+              <div className="form-floating mb-3">
+                <input
+                  id="DataListA"
+                  list="datalistOptions"
+                  placeholder="Search player"
+                  className="form-control mt-3 mb-3"
+                  required
+                  onChange={(event: any) => {
+                    setMails(event, 'A');
+                  }}
+                ></input>
+                <label htmlFor="floatingInput">Search Player</label>
+              </div>
               <datalist id="datalistOptions">{listItems}</datalist>
-              <ol className="mt-1 list-group list-group-numbered">{renderMailsA}</ol>
+              <ListRender
+                parsedArray={matchState.participantsA.emails}
+                uniqueIndex="A"
+                clickRemove={(playerFromChild: string) => removeParticipant(playerFromChild)}
+              />
               <div className="form-floating mb-3">
                 <input
                   type="number"
                   min="0"
                   className="form-control mt-3 mb-3"
-                  placeholder="Won Sets"
                   required
+                  placeholder="Amount of won sets"
                   onChange={(event: ChangeEvent<HTMLInputElement>) => {
                     setNumOfWonSet('A', event.target.value as unknown as number);
                   }}
@@ -149,25 +163,30 @@ export const Modal = (props: PlayerProps) => {
               </div>
               <hr />
               <h5>Team B</h5>
-              <input
-                className="form-control"
-                list="datalistOptions"
-                id="DataListB"
-                placeholder="Search player"
-                onChange={(event: any) => {
-                  setMails(event, 'B');
-                }}
-              ></input>
+              <div className="form-floating mb-3">
+                <input
+                  className="form-control mt-3 mb-3"
+                  list="datalistOptions"
+                  id="DataListB"
+                  placeholder="Search player"
+                  onChange={(event: any) => {
+                    setMails(event, 'B');
+                  }}
+                ></input>
+                <label htmlFor="floatingInput">Search Player</label>
+              </div>
               <datalist id="datalistOptions">{listItems}</datalist>
-              <ol className="mt-1 list-group list-group-numbered">{renderMailsB}</ol>
-
+              <ListRender
+                parsedArray={matchState.participantsB.emails}
+                uniqueIndex="B"
+                clickRemove={(playerFromChild: string) => removeParticipant(playerFromChild)}
+              />
               <div className="form-floating mb-3">
                 <input
                   type="number"
                   min="0"
+                  placeholder="Amount of won sets"
                   className="form-control mt-3 mb-3"
-                  placeholder="Won Sets"
-                  required
                   onChange={(event: ChangeEvent<HTMLInputElement>) => {
                     setNumOfWonSet('B', event.target.value as unknown as number);
                   }}

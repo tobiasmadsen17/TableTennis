@@ -35,18 +35,13 @@ export const BasicColumns: SuperTableColumn<Player>[] = [
   },
   {
     title: 'Single Rating',
-    dataIndex: 'ratings.single',
+    dataIndex: 'ranks.single',
     width: 'auto',
+    sorted: 'descending',
   },
   {
     title: 'Double Rating',
-    dataIndex: 'ratings.double',
+    dataIndex: 'ranks.double',
     width: 'auto',
-  },
-  {
-    title: 'Master Rating',
-    dataIndex: 'masterRating',
-    width: 'auto',
-    sorted: 'descending',
   },
 ];
