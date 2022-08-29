@@ -36,18 +36,34 @@ export const Modal = (props: PlayerProps) => {
   const [alert, alertHidden] = useState(true);
   const [alertMessage, setAlertMessage] = useState('');
 
-  const removeParticipant = (player: string) => {
-    var array = [...matchState.participantsA.emails];
-    var index = array.indexOf(player);
-    if (index !== -1) {
-      array.splice(index, 1);
-      setMatchState((current) => ({
-        ...current,
-        participantsA: {
-          ...current.participantsA,
-          emails: array,
-        },
-      }));
+  const removeParticipant = (player: string, team: string) => {
+    const arrayA = [...matchState.participantsA.emails];
+    const arrayB = [...matchState.participantsB.emails];
+
+    if (team === 'A') {
+      const index = arrayA.indexOf(player);
+      if (index !== -1) {
+        arrayA.splice(index, 1);
+        setMatchState((current) => ({
+          ...current,
+          participantsA: {
+            ...current.participantsA,
+            emails: arrayA,
+          },
+        }));
+      }
+    } else if (team === 'B') {
+      const index = arrayB.indexOf(player);
+      if (index !== -1) {
+        arrayB.splice(index, 1);
+        setMatchState((current) => ({
+          ...current,
+          participantsB: {
+            ...current.participantsB,
+            emails: arrayB,
+          },
+        }));
+      }
     }
   };
 
@@ -146,7 +162,7 @@ export const Modal = (props: PlayerProps) => {
               <ListRender
                 parsedArray={matchState.participantsA.emails}
                 uniqueIndex="A"
-                clickRemove={(playerFromChild: string) => removeParticipant(playerFromChild)}
+                clickRemove={(playerFromChild: string) => removeParticipant(playerFromChild, 'A')}
               />
               <div className="form-floating mb-3">
                 <input
@@ -179,7 +195,7 @@ export const Modal = (props: PlayerProps) => {
               <ListRender
                 parsedArray={matchState.participantsB.emails}
                 uniqueIndex="B"
-                clickRemove={(playerFromChild: string) => removeParticipant(playerFromChild)}
+                clickRemove={(playerFromChild: string) => removeParticipant(playerFromChild, 'B')}
               />
               <div className="form-floating mb-3">
                 <input
