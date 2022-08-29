@@ -17,6 +17,16 @@ export interface PlayerProps {
   reload: Function;
 }
 
+export interface UserInfo {
+  email: string;
+  firstname: string;
+  lastname: string;
+}
+
+export interface Credentials extends AWS.CognitoIdentityServiceProvider.AuthenticationResultType {
+  ExpirationTimestamp: number;
+}
+
 export const BasicColumns: SuperTableColumn<Player>[] = [
   {
     title: 'Player',
