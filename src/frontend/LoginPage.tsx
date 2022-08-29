@@ -53,6 +53,14 @@ export function LoginPage(props: LoginPageProps) {
       >
         {props.loading ? '...' : 'Login'}
       </button>
+      <a
+        href={`https://ckal.dk/sign-up?redirect=${window.location.origin}`}
+        target="_blank"
+        rel="noreferrer"
+        style={{ marginTop: 24 }}
+      >
+        Sign up
+      </a>
     </div>
   );
 }
