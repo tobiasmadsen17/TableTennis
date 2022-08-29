@@ -3,8 +3,15 @@ import { useEffect, useState } from 'react';
 import { Modal } from '../Modal';
 import axios from 'axios';
 import { Collapse } from '../Collapse';
-import { BasicColumns, Player } from './lib';
-export const PaginationExample = () => {
+import { BasicColumns, Player, UserInfo } from './lib';
+import { clearCredentials } from '../../credentialsHandler';
+
+interface PaginationExampleProps {
+  userInfo: UserInfo;
+  clearUserInfo(): void;
+}
+
+export const PaginationExample = (props: PaginationExampleProps) => {
   const [players, setPlayers] = useState([]);
 
   const updateTable = (reload: boolean) => {
@@ -47,10 +54,8 @@ export const PaginationExample = () => {
             rows={players}
             columns={BasicColumns}
             rowKey={'_id'}
-            itemsPerPage={10}
-            removePaginationBottom
             removeInfoText
-            removePaginationTop
+            removeSearch
           />
           <hr />
         </div>
@@ -76,6 +81,16 @@ export const PaginationExample = () => {
             id="right"
           />
         </div>
+      </div>
+      <div style={{ display: 'flex', justifyContent: 'center', margin: 48 }}>
+        <button
+          onClick={async () => {
+            await clearCredentials();
+            props.clearUserInfo();
+          }}
+        >
+          Logout
+        </button>
       </div>
     </div>
   );
