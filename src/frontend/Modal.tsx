@@ -2,7 +2,7 @@ import { PlayerProps, Player } from './table/lib';
 import { useState, ChangeEvent } from 'react';
 import { Alert } from './Alert';
 import axios from 'axios';
-export const Modal = (props: PlayerProps, test: boolean) => {
+export const Modal = (props: PlayerProps) => {
   const listItems = props.players.map((value: Player) => (
     <option key={value._id} value={value.email}>
       {value.email}
@@ -32,25 +32,48 @@ export const Modal = (props: PlayerProps, test: boolean) => {
       numSetsWon: '',
     },
   });
+  const renderMailsA = matchState.participantsA.emails.map((item, index) => (
+    <li className="list-group-item" key={index}>
+      {item}
+    </li>
+  ));
+  const renderMailsB = matchState.participantsB.emails.map((item, index) => (
+    <li className="list-group-item" key={index}>
+      {item}
+    </li>
+  ));
   const [alert, alertHidden] = useState(true);
   const [alertMessage, setAlertMessage] = useState('');
 
-  const setEmails = (target: string, event: any) => {
-    target === 'A'
-      ? setMatchState((current) => ({
-          ...current,
-          participantsA: {
-            ...current.participantsA,
-            emails: Array.from(event.target.selectedOptions, (option: any) => option.value),
-          },
-        }))
-      : setMatchState((current) => ({
-          ...current,
-          participantsB: {
-            ...current.participantsB,
-            emails: Array.from(event.target.selectedOptions, (option: any) => option.value),
-          },
-        }));
+  const setMails = (event: any, target: string) => {
+    let value = event.target.value;
+    let players: string[] = [];
+    props.players.forEach((player) => {
+      players.push(player.email);
+    });
+
+    let includes = players.includes(value);
+    if (includes === true && target === 'A') {
+      setMatchState((current) => ({
+        ...current,
+        participantsA: {
+          ...current.participantsA,
+          emails: [...current.participantsA.emails, value],
+        },
+      }));
+      const inputForm = document.getElementById('DataListA') as HTMLInputElement;
+      inputForm.value = '';
+    } else if (includes === true && target === 'B') {
+      setMatchState((current) => ({
+        ...current,
+        participantsB: {
+          ...current.participantsB,
+          emails: [...current.participantsB.emails, value],
+        },
+      }));
+      const inputForm = document.getElementById('DataListB') as HTMLInputElement;
+      inputForm.value = '';
+    }
   };
   const setNumOfWonSet = (target: string, event: number) => {
     target === 'A'
@@ -70,7 +93,6 @@ export const Modal = (props: PlayerProps, test: boolean) => {
         }));
   };
   const submitMatch = async (matchForSubmit: matchData) => {
-    console.log(matchForSubmit.participantsA.numSetsWon);
     await axios({
       method: 'POST',
       url: 'https://api.ckal.dk/table-tennis/session',
@@ -101,22 +123,17 @@ export const Modal = (props: PlayerProps, test: boolean) => {
             <div className="modal-body needs-validation">
               <Alert alertMessage={alertMessage} hidden={alert} />
               <h5>Team A</h5>
-              <select
-                className="form-select mt-3"
-                multiple
-                required
-                aria-label="multiple select example"
-                onChange={(event: ChangeEvent<HTMLSelectElement>) => {
-                  setEmails('A', event);
+              <input
+                className="form-control"
+                list="datalistOptions"
+                id="DataListA"
+                placeholder="Search player"
+                onChange={(event: any) => {
+                  setMails(event, 'A');
                 }}
-              >
-                {listItems}
-              </select>
-              <div className="form-text">
-                <p>
-                  <em>Ctrl + Click to select multiple</em>
-                </p>
-              </div>
+              ></input>
+              <datalist id="datalistOptions">{listItems}</datalist>
+              <ol className="mt-1 list-group list-group-numbered">{renderMailsA}</ol>
               <div className="form-floating mb-3">
                 <input
                   type="number"
@@ -130,23 +147,20 @@ export const Modal = (props: PlayerProps, test: boolean) => {
                 ></input>
                 <label htmlFor="floatingInput">Amount of won sets</label>
               </div>
+              <hr />
               <h5>Team B</h5>
-              <select
-                className="form-select mt-3"
-                multiple
-                required
-                aria-label="Default select example"
-                onChange={(event: ChangeEvent<HTMLSelectElement>) => {
-                  setEmails('B', event);
+              <input
+                className="form-control"
+                list="datalistOptions"
+                id="DataListB"
+                placeholder="Search player"
+                onChange={(event: any) => {
+                  setMails(event, 'B');
                 }}
-              >
-                {listItems}
-              </select>
-              <div className="form-text">
-                <p>
-                  <em>Ctrl + Click to select multiple</em>
-                </p>
-              </div>
+              ></input>
+              <datalist id="datalistOptions">{listItems}</datalist>
+              <ol className="mt-1 list-group list-group-numbered">{renderMailsB}</ol>
+
               <div className="form-floating mb-3">
                 <input
                   type="number"

@@ -26,6 +26,7 @@ export const PaginationExample = () => {
         data.forEach((player: Player) => {
           player.ratings.single = Math.round(player.ratings.single);
           player.ratings.double = Math.round(player.ratings.double);
+          player.masterRating = Math.round(player.masterRating);
         });
         setPlayers(data);
       });

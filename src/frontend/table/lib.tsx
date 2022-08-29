@@ -8,6 +8,7 @@ export interface Player {
     double: number;
   };
   name: string;
+  masterRating: number;
 }
 
 export interface PlayerProps {
@@ -26,11 +27,16 @@ export const BasicColumns: SuperTableColumn<Player>[] = [
     title: 'Single Rating',
     dataIndex: 'ratings.single',
     width: 'auto',
-    sorted: 'descending',
   },
   {
     title: 'Double Rating',
     dataIndex: 'ratings.double',
     width: 'auto',
+  },
+  {
+    title: 'Master Rating',
+    dataIndex: 'masterRating',
+    width: 'auto',
+    sorted: 'descending',
   },
 ];
