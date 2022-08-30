@@ -36,92 +36,71 @@ export const Modal = (props: PlayerProps) => {
   const [alert, alertHidden] = useState(true);
   const [alertMessage, setAlertMessage] = useState('');
 
-  const removeParticipant = (player: string, team: string) => {
-    const arrayA = [...matchState.participantsA.emails];
-    const arrayB = [...matchState.participantsB.emails];
-
-    if (team === 'A') {
-      const index = arrayA.indexOf(player);
-      if (index !== -1) {
-        arrayA.splice(index, 1);
-        setMatchState((current) => ({
+  const removeParticipant = <
+    directKey extends keyof objectParam,
+    nestedKey extends keyof objectParam[directKey],
+    objectParam extends Record<directKey, Record<nestedKey, string[]>>
+  >(
+    matchState: objectParam,
+    participants: directKey,
+    playerValue: nestedKey,
+    value: string
+  ) => {
+    const array = [matchState[participants][playerValue]][0];
+    const index = array.indexOf(value);
+    if (index !== -1) {
+      array.splice(index, 1);
+      setMatchState((current) => ({
+        ...current,
+        [participants]: {
           ...current,
-          participantsA: {
-            ...current.participantsA,
-            emails: arrayA,
-          },
-        }));
-      }
-    } else if (team === 'B') {
-      const index = arrayB.indexOf(player);
-      if (index !== -1) {
-        arrayB.splice(index, 1);
-        setMatchState((current) => ({
-          ...current,
-          participantsB: {
-            ...current.participantsB,
-            emails: arrayB,
-          },
-        }));
-      }
+          emails: array,
+        },
+      }));
     }
   };
-
-  const setMails = (event: any, target: string) => {
-    let value = event.target.value;
+  const setPlayerValue = <
+    directKey extends keyof objectParam,
+    nestedKey extends keyof objectParam[directKey],
+    objectParam extends Record<directKey, Record<nestedKey, any>>
+  >(
+    matchState: objectParam,
+    participants: directKey,
+    playerValue: nestedKey,
+    event: any
+  ) => {
+    const value = event.target.value;
     let players: string[] = [];
     props.players.forEach((player) => {
       players.push(player.email);
     });
-
-    let includes = players.includes(value);
-    if (includes === true && target === 'A') {
+    if (players.includes(value)) {
       setMatchState((current) => ({
         ...current,
-        participantsA: {
-          ...current.participantsA,
-          emails: [...current.participantsA.emails, value],
+        [participants]: {
+          ...matchState[participants],
+          [playerValue]: [...matchState[participants][playerValue], value],
         },
       }));
-      const inputForm = document.getElementById('DataListA') as HTMLInputElement;
+      const inputForm = document.getElementById(
+        `DataList${participants as string}`
+      ) as HTMLInputElement;
       inputForm.value = '';
-    } else if (includes === true && target === 'B') {
+    } else if (playerValue === 'numSetsWon') {
       setMatchState((current) => ({
         ...current,
-        participantsB: {
-          ...current.participantsB,
-          emails: [...current.participantsB.emails, value],
+        [participants]: {
+          ...matchState[participants],
+          [playerValue]: value,
         },
       }));
-      const inputForm = document.getElementById('DataListB') as HTMLInputElement;
-      inputForm.value = '';
     }
-  };
-  const setNumOfWonSet = (target: string, event: number) => {
-    target === 'A'
-      ? setMatchState((current) => ({
-          ...current,
-          participantsA: {
-            ...current.participantsA,
-            numSetsWon: event,
-          },
-        }))
-      : setMatchState((current) => ({
-          ...current,
-          participantsB: {
-            ...current.participantsB,
-            numSetsWon: event,
-          },
-        }));
   };
   const submitMatch = async (matchForSubmit: matchData) => {
     await axios({
       method: 'POST',
       url: 'https://api.ckal.dk/table-tennis/session',
       data: matchForSubmit,
-      headers: {
-        'x-api-key': window.location.host === 'tabletennis.ckal.dk' ? 'hej' : '',
-      },
     })
       .then(() => {
         props.reload(true);
@@ -150,13 +129,14 @@ export const Modal = (props: PlayerProps) => {
               <h5>Team A</h5>
               <div className="form-floating mb-3">
                 <input
-                  id="DataListA"
+                  id="DataListparticipantsA"
                   list="datalistOptions"
                   placeholder="Search player"
                   className="form-control mt-3 mb-3"
                   required
+                  disabled={matchState.participantsA.emails.length === 2}
                   onChange={(event: any) => {
-                    setMails(event, 'A');
+                    setPlayerValue(matchState, 'participantsA', 'emails', event);
                   }}
                 ></input>
                 <label htmlFor="floatingInput">Search Player</label>
@@ -165,7 +145,9 @@ export const Modal = (props: PlayerProps) => {
               <ListRender
                 parsedArray={matchState.participantsA.emails}
                 uniqueIndex="A"
-                clickRemove={(playerFromChild: string) => removeParticipant(playerFromChild, 'A')}
+                clickRemove={(playerFromChild: string) =>
+                  removeParticipant(matchState, 'participantsA', 'emails', playerFromChild)
+                }
               />
               <div className="form-floating mb-3">
                 <input
@@ -175,7 +157,7 @@ export const Modal = (props: PlayerProps) => {
                   required
                   placeholder="Amount of won sets"
                   onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                    setNumOfWonSet('A', event.target.value as unknown as number);
+                    setPlayerValue(matchState, 'participantsA', 'numSetsWon', event);
                   }}
                 ></input>
                 <label htmlFor="floatingInput">Amount of won sets</label>
@@ -186,10 +168,11 @@ export const Modal = (props: PlayerProps) => {
                 <input
                   className="form-control mt-3 mb-3"
                   list="datalistOptions"
-                  id="DataListB"
+                  id="DataListparticipantsB"
+                  disabled={matchState.participantsB.emails.length === 2}
                   placeholder="Search player"
                   onChange={(event: any) => {
-                    setMails(event, 'B');
+                    setPlayerValue(matchState, 'participantsB', 'emails', event);
                   }}
                 ></input>
                 <label htmlFor="floatingInput">Search Player</label>
@@ -198,7 +181,9 @@ export const Modal = (props: PlayerProps) => {
               <ListRender
                 parsedArray={matchState.participantsB.emails}
                 uniqueIndex="B"
-                clickRemove={(playerFromChild: string) => removeParticipant(playerFromChild, 'B')}
+                clickRemove={(playerFromChild: string) =>
+                  removeParticipant(matchState, 'participantsB', 'emails', playerFromChild)
+                }
               />
               <div className="form-floating mb-3">
                 <input
@@ -207,7 +192,7 @@ export const Modal = (props: PlayerProps) => {
                   placeholder="Amount of won sets"
                   className="form-control mt-3 mb-3"
                   onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                    setNumOfWonSet('B', event.target.value as unknown as number);
+                    setPlayerValue(matchState, 'participantsB', 'numSetsWon', event);
                   }}
                 ></input>
                 <label htmlFor="floatingInput">Amount of won sets</label>

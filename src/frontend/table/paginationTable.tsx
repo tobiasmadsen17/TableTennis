@@ -81,7 +81,7 @@ export const PaginationExample = (props: PaginationExampleProps) => {
       <div className="row">
         <div>
           <button
-            className="btn btn-outline-primary mt-5"
+            className="btn btn-outline-primary mt-5 mb-3"
             onClick={async () => {
               await clearCredentials();
               props.clearUserInfo();
