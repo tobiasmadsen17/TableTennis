@@ -75,6 +75,9 @@ export const Modal = (props: PlayerProps, test: boolean) => {
       method: 'POST',
       url: 'https://api.ckal.dk/table-tennis/session',
       data: matchForSubmit,
+      headers: {
+        'x-api-key': window.location.host === 'tabletennis.ckal.dk' ? 'hej' : '',
+      },
     })
       .then(() => {
         props.reload(true);
