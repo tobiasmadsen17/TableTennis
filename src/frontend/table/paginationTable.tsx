@@ -70,8 +70,8 @@ export const PaginationExample = (props: PaginationExampleProps) => {
         </div>
         <div className="col-lg-6 col-md-auto">
           <Collapse
-            header="Elo Rating Description"
-            message="This is a description"
+            header="Ranking Description"
+            message="Registering games affects your rating. Longer games results in higher wins and losses of rating. Divisions are (lowest to highest): Bronze, Silver, Gold, Platinum, Diamon. Tiers are 1 through 5. Your rating affect how many points you need to win the game versus your opponent - consult <this> to see your point cap versus different opponents. The more you play, the less uncertain the system is about your rank."
             subheader="GitHub Repo"
             submessage="GitHub Repo"
             id="right"
