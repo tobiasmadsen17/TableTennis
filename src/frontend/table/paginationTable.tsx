@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { Modal } from '../Modal';
 import axios from 'axios';
 import { Collapse } from '../Collapse';
-import { BasicColumns, Player, UserInfo } from './lib';
+import { BasicColumns, UserInfo } from './lib';
 import { clearCredentials } from '../../credentialsHandler';
 
 interface PaginationExampleProps {
@@ -30,10 +30,6 @@ export const PaginationExample = (props: PaginationExampleProps) => {
         return response.data;
       })
       .then((data) => {
-        data.forEach((player: Player) => {
-          player.ratings.single = Math.round(player.ratings.single);
-          player.ratings.double = Math.round(player.ratings.double);
-        });
         setPlayers(data);
       });
   };
@@ -53,7 +49,7 @@ export const PaginationExample = (props: PaginationExampleProps) => {
           <SuperTable
             rows={players}
             columns={BasicColumns}
-            rowKey={'_id'}
+            rowKey={'email'}
             removeInfoText
             removeSearch
           />
@@ -82,15 +78,18 @@ export const PaginationExample = (props: PaginationExampleProps) => {
           />
         </div>
       </div>
-      <div style={{ display: 'flex', justifyContent: 'center', margin: 48 }}>
-        <button
-          onClick={async () => {
-            await clearCredentials();
-            props.clearUserInfo();
-          }}
-        >
-          Logout
-        </button>
+      <div className="row">
+        <div>
+          <button
+            className="btn btn-outline-primary mt-5"
+            onClick={async () => {
+              await clearCredentials();
+              props.clearUserInfo();
+            }}
+          >
+            Logout
+          </button>
+        </div>
       </div>
     </div>
   );

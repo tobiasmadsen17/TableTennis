@@ -403,7 +403,6 @@ export function SuperTable<T>(props: SuperTableProps<T>) {
                 }`,
                 textAlign: 'center',
                 fontSize: '18px',
-                margin: '24px',
               }}
               className="supertable-nodataplaceholder"
             >

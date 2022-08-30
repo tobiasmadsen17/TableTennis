@@ -24,9 +24,7 @@ export function RowGrid<T>(props: RowGridProps<T>) {
         gridTemplateColumns:
           (props.multiSelection ? 'min-content ' : '') +
           props.columns.map((col) => col.width || 'min-content').join(' ') +
-          (props.onRowEditSave && !props.insertEditIconIntoOtherColumn
-            ? ' min-content'
-            : ''),
+          (props.onRowEditSave && !props.insertEditIconIntoOtherColumn ? ' min-content' : ''),
         fontSize: '14px',
         overflow: 'auto',
         alignItems: 'center',
