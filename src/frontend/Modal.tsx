@@ -39,6 +39,11 @@ export function Modal(props: PlayerProps) {
       .then(() => {
         props.reload(true);
         document.getElementById(`close${props.matchType}`)?.click();
+        setEmailsA([props.ownEmail]);
+        setNumSetsWonA('');
+        setNumSetsWonB('');
+        setEmailsB([]);
+        setTotalPoints(22);
       })
       .catch((response) => {
         setAlertMessage(response.response.data);
