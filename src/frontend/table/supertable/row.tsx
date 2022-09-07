@@ -1,6 +1,6 @@
 import React, { CSSProperties, useEffect, useMemo, useState } from 'react';
 import { getProp, LIGHT_GRAY, setProp } from './lib';
-import { CustomIcons, SuperTableColumn } from './superTable';
+import { CustomIcons, SuperTableColumn, SuperTableEditComponent } from './superTable';
 import { AiOutlineEnter, AiOutlineEdit } from 'react-icons/ai';
 import { MdCheck, MdCancel } from 'react-icons/md';
 import { Spinner } from './spinner';
@@ -16,7 +16,7 @@ interface RowProps<T> {
     setSelected: React.Dispatch<React.SetStateAction<T[]>>;
   };
   hasError?: boolean;
-  insertEditIconIntoColumnTitle?: string;
+  insertEditIconsIntoColumnTitle?: string;
   customIcons?: CustomIcons;
   dontShrinkInput?: boolean;
   renderBottomLine: boolean;
@@ -106,7 +106,7 @@ export function Row<T>(props: RowProps<T>) {
           newContent = await col.render(getProp(props.row, col.dataIndex), props.row, props.index);
         } catch {}
       } else {
-        newContent = safeToString(getProp(props.row, col.dataIndex));
+        newContent = safeToString(getProp(props.row, col.dataIndex) ?? '');
       }
 
       setContents((contents) => {
@@ -117,7 +117,7 @@ export function Row<T>(props: RowProps<T>) {
     });
   }, [props.columns, props.row, props.index]);
 
-  function EditCell() {
+  function EditIcons() {
     const disable = isEditing && editedRow && props.canSave && !props.canSave(editedRow);
 
     return (
@@ -130,6 +130,7 @@ export function Row<T>(props: RowProps<T>) {
               style={{
                 cursor: disable ? 'not-allowed' : 'pointer',
                 color: disable ? 'rgba(0,0,0,0.25)' : undefined,
+                display: 'flex',
               }}
               onClick={async () => {
                 if (disable) {
@@ -160,7 +161,7 @@ export function Row<T>(props: RowProps<T>) {
               {props.customIcons?.confirm || <MdCheck style={{ fontSize: 18 }} />}
             </div>
             <div
-              style={{ cursor: 'pointer', marginLeft: 4 }}
+              style={{ cursor: 'pointer', marginLeft: 4, display: 'flex' }}
               onClick={() => {
                 setIsEditing(false);
                 setEditedRow(undefined);
@@ -171,7 +172,7 @@ export function Row<T>(props: RowProps<T>) {
           </>
         ) : (
           <div
-            style={{ cursor: 'pointer' }}
+            style={{ cursor: 'pointer', display: 'flex' }}
             onClick={() => {
               setIsEditing(true);
               setEditedRow(JSON.parse(JSON.stringify(props.row)));
@@ -211,10 +212,22 @@ export function Row<T>(props: RowProps<T>) {
           />
         </div>
       )}
-      {props.columns.map((col, i) =>
-        isEditing && col.editingType ? (
+      {props.columns.map((col, i) => {
+        let CustomEditComponent: (props: SuperTableEditComponent) => any = () => '';
+        if (typeof col.editingType === 'function') {
+          CustomEditComponent = col.editingType;
+        }
+        return isEditing && col.editingType ? (
           <div key={col.title} style={getCellStyle(col)} className="supertable-cell-editing">
-            {col.editingType === 'boolean' || Array.isArray(col.editingType) ? (
+            {typeof col.editingType === 'function' ? (
+              <CustomEditComponent
+                value={safeToString(getProp(editedRow, col.dataIndex))}
+                setValue={(value) => {
+                  setProp(editedRow, col.dataIndex, value);
+                  setEditedRow(JSON.parse(JSON.stringify(editedRow)));
+                }}
+              />
+            ) : col.editingType === 'boolean' || Array.isArray(col.editingType) ? (
               <select
                 className="supertable-edit-input"
                 value={safeToString(getProp(editedRow, col.dataIndex))}
@@ -275,22 +288,30 @@ export function Row<T>(props: RowProps<T>) {
             }
             onMouseLeave={() => props.sethoveredrowkey && props.sethoveredrowkey('')}
           >
-            <div
-              style={{
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                whiteSpace: 'nowrap',
-                display: 'flex',
-                alignItems: 'center',
-              }}
-            >
-              {contents[i] ? contents[i].loading ? <Spinner /> : contents[i].content : ''}
-              {col.title === props.insertEditIconIntoColumnTitle && <EditCell />}
-            </div>
+            {contents[i] ? (
+              contents[i].loading ? (
+                <Spinner />
+              ) : typeof contents[i].content === 'string' ? (
+                <div
+                  style={{
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap',
+                  }}
+                >
+                  {contents[i].content}
+                </div>
+              ) : (
+                contents[i].content
+              )
+            ) : (
+              ''
+            )}
+            {col.title === props.insertEditIconsIntoColumnTitle && <EditIcons />}
           </div>
-        )
-      )}
-      {props.onRowEditSave && !props.insertEditIconIntoColumnTitle && (
+        );
+      })}
+      {props.onRowEditSave && !props.insertEditIconsIntoColumnTitle && (
         <div
           style={{
             ...getCellStyle({
@@ -300,10 +321,10 @@ export function Row<T>(props: RowProps<T>) {
               alignVertically: 'center',
             }),
 
-            width: !props.insertEditIconIntoColumnTitle && !props.customIcons ? 40 : undefined,
+            width: !props.insertEditIconsIntoColumnTitle && !props.customIcons ? 40 : undefined,
           }}
         >
-          <EditCell />
+          <EditIcons />
         </div>
       )}
       {props.renderBottomLine && (
@@ -312,7 +333,7 @@ export function Row<T>(props: RowProps<T>) {
             gridColumn: `span ${
               props.columns.length +
               (props.multiSelection ? 1 : 0) +
-              (props.onRowEditSave && !props.insertEditIconIntoColumnTitle ? 1 : 0)
+              (props.onRowEditSave && !props.insertEditIconsIntoColumnTitle ? 1 : 0)
             }`,
             borderBottom: `1px solid ${LIGHT_GRAY}`,
           }}
@@ -324,7 +345,7 @@ export function Row<T>(props: RowProps<T>) {
             gridColumn: `span ${
               props.columns.length +
               (props.multiSelection ? 1 : 0) +
-              (props.onRowEditSave && !props.insertEditIconIntoColumnTitle ? 1 : 0)
+              (props.onRowEditSave && !props.insertEditIconsIntoColumnTitle ? 1 : 0)
             }`,
             display: 'flex',
             borderBottom: `1px solid ${LIGHT_GRAY}`,

@@ -24,7 +24,6 @@ export function ColumnHeader<T>(props: ColumnHeaderProps<T>) {
         cursor: props.setSortInfo ? 'pointer' : undefined,
         borderTop: props.sticky ? `1px solid ${LIGHT_GRAY}` : undefined,
         borderBottom: `2px solid ${LIGHT_GRAY}`,
-        marginBottom: 2,
         ...(props.sticky ? { position: 'sticky', background: 'white', top: '0px', zIndex: 1 } : {}),
       }}
       className="supertable-columnheader"

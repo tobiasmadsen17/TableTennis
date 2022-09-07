@@ -50,6 +50,10 @@ export const BasicColumns: SuperTableColumn<Player>[] = [
     dataIndex: 'ranks.double',
     sorter: (a, b) => sortRank(a.ranks.double, b.ranks.double),
   },
+  {
+    title: 'Matches played',
+    dataIndex: 'matchesPlayed',
+  },
 ];
 
 function sortRank(a: string, b: string) {

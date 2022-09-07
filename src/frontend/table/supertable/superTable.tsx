@@ -59,6 +59,11 @@ export interface CustomIcons {
   confirm?: React.ReactNode;
 }
 
+export interface SuperTableEditComponent {
+  value: any;
+  setValue(newValue: any): void;
+}
+
 export interface SuperTableColumn<T> {
   title: string;
   dataIndex: string;
@@ -67,7 +72,12 @@ export interface SuperTableColumn<T> {
   titleAlign?: 'start' | 'center' | 'end';
   alignVertically?: 'start' | 'center' | 'end';
   sorted?: SortDirection;
-  editingType?: 'string' | 'number' | 'boolean' | SelectOption[];
+  editingType?:
+    | 'string'
+    | 'number'
+    | 'boolean'
+    | SelectOption[]
+    | ((props: SuperTableEditComponent) => any);
   ignoreRowClick?: boolean;
   dontShrinkInput?: boolean;
   disableSorting?: boolean;
@@ -356,9 +366,11 @@ export function SuperTable<T>(props: SuperTableProps<T>) {
                       zIndex: 1,
                     }
                   : {}),
+                WebkitBoxSizing: 'border-box',
+                MozBoxSizing: 'border-box',
+                boxSizing: 'border-box',
                 height: '100%',
                 borderBottom: `2px solid ${LIGHT_GRAY}`,
-                marginBottom: 2,
               }}
             >
               <input
@@ -394,20 +406,25 @@ export function SuperTable<T>(props: SuperTableProps<T>) {
             />
           )}
           {shownRows.length === 0 ? (
-            <div
-              style={{
-                gridColumn: `span ${
-                  columns.length +
-                  (props.multiSelection ? 1 : 0) +
-                  (props.onRowEditSave && !props.insertEditIconIntoColumnTitle ? 1 : 0)
-                }`,
-                textAlign: 'center',
-                fontSize: '18px',
-              }}
-              className="supertable-nodataplaceholder"
-            >
-              No data to show...
-            </div>
+            props.isRefreshing ? (
+              <div />
+            ) : (
+              <div
+                style={{
+                  gridColumn: `span ${
+                    columns.length +
+                    (props.multiSelection ? 1 : 0) +
+                    (props.onRowEditSave && !props.insertEditIconIntoColumnTitle ? 1 : 0)
+                  }`,
+                  textAlign: 'center',
+                  fontSize: '18px',
+                  margin: '24px',
+                }}
+                className="supertable-nodataplaceholder"
+              >
+                No data to show...
+              </div>
+            )
           ) : (
             shownRows.map((row, i) => (
               <Row
@@ -427,7 +444,7 @@ export function SuperTable<T>(props: SuperTableProps<T>) {
                 renderBottomLine={i < shownRows.length - 1 || !props.removeLastRowBottomBorder}
                 getRowKey={getRowKey}
                 multiSelection={props.multiSelection}
-                insertEditIconIntoColumnTitle={props.insertEditIconIntoColumnTitle}
+                insertEditIconsIntoColumnTitle={props.insertEditIconIntoColumnTitle}
                 hasError={props.rowHasError && props.rowHasError(row)}
                 index={i}
                 customIcons={props.customIcons}

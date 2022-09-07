@@ -16,7 +16,7 @@ export function SearchInput(props: SearchInputProps) {
     >
       <AiOutlineSearch style={{ fontSize: 20, marginRight: 8 }} />
       <input
-        placeholder="Search player..."
+        placeholder="Search items..."
         value={props.value}
         onChange={(e) => props.onChange(e.target.value)}
         style={{
