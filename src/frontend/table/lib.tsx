@@ -14,6 +14,7 @@ export interface PlayerProps {
   players: Player[];
   matchType: string;
   reload: Function;
+  ownEmail: string;
 }
 
 export interface UserInfo {

@@ -18,7 +18,7 @@ export const Modal = (props: PlayerProps) => {
   const [matchState, setMatchState] = useState<matchData>({
     totalPoints: 22,
     participantsA: {
-      emails: [],
+      emails: [props.ownEmail],
       numSetsWon: '',
     },
     participantsB: {

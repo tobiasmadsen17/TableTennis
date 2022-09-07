@@ -65,7 +65,14 @@ export const PaginationExample = (props: PaginationExampleProps) => {
             submessage="Head over and create a user!"
             id="left"
             linkHref="https://www.CKAL.dk"
-            modal={<Modal players={players} matchType="Register" reload={updateTable} />}
+            modal={
+              <Modal
+                players={players}
+                matchType="Register"
+                reload={updateTable}
+                ownEmail={props.userInfo.email}
+              />
+            }
           />
         </div>
         <div className="col-lg-6 col-md-auto">
