@@ -29,6 +29,12 @@ export interface Credentials extends AWS.CognitoIdentityServiceProvider.Authenti
 
 export const BasicColumns: SuperTableColumn<Player>[] = [
   {
+    title: 'Rank',
+    dataIndex: '',
+    render: (_, __, index) => index + 1,
+  },
+
+  {
     title: 'Player',
     dataIndex: 'name',
     width: 'auto',
@@ -60,10 +66,10 @@ function sortRank(a: string, b: string) {
 
   if (uncertaintyA !== uncertaintyB) {
     if (!uncertaintyA) {
-      return -1;
+      return 1;
     }
     if (!uncertaintyB) {
-      return 1;
+      return -1;
     }
     return uncertaintyB.length - uncertaintyA.length;
   }

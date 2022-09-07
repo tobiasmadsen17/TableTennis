@@ -126,6 +126,33 @@ export const Modal = (props: PlayerProps) => {
             <div className="modal-body needs-validation">
               <Alert alertMessage={alertMessage} hidden={alert} />
               <h5>Team A</h5>
+              <div
+                className="form-floating mb-3"
+                style={{ display: 'flex', justifyContent: 'space-around' }}
+              >
+                <div
+                  style={{ display: 'flex', alignItems: 'center' }}
+                  onClick={() => setMatchState({ ...matchState, totalPoints: 10 })}
+                >
+                  <input
+                    type="checkbox"
+                    style={{ marginRight: 8 }}
+                    checked={matchState.totalPoints === 10}
+                  />
+                  To 5
+                </div>
+                <div
+                  style={{ display: 'flex', alignItems: 'center' }}
+                  onClick={() => setMatchState({ ...matchState, totalPoints: 22 })}
+                >
+                  <input
+                    type="checkbox"
+                    style={{ marginRight: 8 }}
+                    checked={matchState.totalPoints === 22}
+                  />
+                  To 11
+                </div>
+              </div>
               <div className="form-floating mb-3">
                 <input
                   id="DataListparticipantsA"
