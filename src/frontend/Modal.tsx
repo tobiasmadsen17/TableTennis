@@ -6,7 +6,6 @@ import { ListRender } from './ListRender';
 export const Modal = (props: PlayerProps) => {
   interface matchData {
     totalPoints: number;
-    gameOfMultipleSets: boolean;
     participantsA: {
       emails: string[];
       numSetsWon: number | string;
@@ -18,7 +17,6 @@ export const Modal = (props: PlayerProps) => {
   }
   const [matchState, setMatchState] = useState<matchData>({
     totalPoints: 22,
-    gameOfMultipleSets: true,
     participantsA: {
       emails: [],
       numSetsWon: '',
@@ -100,6 +98,7 @@ export const Modal = (props: PlayerProps) => {
     await axios({
       method: 'POST',
       url: 'https://api.ckal.dk/table-tennis/session',
+      headers: { 'x-api-key': window.location.host === 'tabletennis.ckal.dk' ? 'hej' : '' },
       data: matchForSubmit,
     })
       .then(() => {
