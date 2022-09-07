@@ -49,7 +49,7 @@ export const PaginationExample = (props: PaginationExampleProps) => {
           <SuperTable
             rows={players}
             columns={BasicColumns}
-            rowKey={'email'}
+            rowKey="email"
             removeInfoText
             removeSearch
           />

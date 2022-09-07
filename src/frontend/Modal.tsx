@@ -1,31 +1,16 @@
 import { PlayerProps, Player } from './table/lib';
-import { useState, ChangeEvent } from 'react';
+import { useState } from 'react';
 import { Alert } from './Alert';
 import axios from 'axios';
 import { ListRender } from './ListRender';
-export const Modal = (props: PlayerProps) => {
-  interface matchData {
-    totalPoints: number;
-    participantsA: {
-      emails: string[];
-      numSetsWon: number | string;
-    };
-    participantsB: {
-      emails: string[];
-      numSetsWon: number | string;
-    };
-  }
-  const [matchState, setMatchState] = useState<matchData>({
-    totalPoints: 22,
-    participantsA: {
-      emails: [props.ownEmail],
-      numSetsWon: '',
-    },
-    participantsB: {
-      emails: [],
-      numSetsWon: '',
-    },
-  });
+
+export function Modal(props: PlayerProps) {
+  const [emailsA, setEmailsA] = useState<string[]>([props.ownEmail]);
+  const [emailsB, setEmailsB] = useState<string[]>([]);
+  const [numSetsWonA, setNumSetsWonA] = useState('');
+  const [numSetsWonB, setNumSetsWonB] = useState('');
+  const [totalPoints, setTotalPoints] = useState(22);
+
   const listItems = props.players.map((value: Player) => (
     <option key={value.email} value={value.email}>
       {value.email}
@@ -34,72 +19,22 @@ export const Modal = (props: PlayerProps) => {
   const [alert, alertHidden] = useState(true);
   const [alertMessage, setAlertMessage] = useState('');
 
-  const removeParticipant = <
-    directKey extends keyof objectParam,
-    nestedKey extends keyof objectParam[directKey],
-    objectParam extends Record<directKey, Record<nestedKey, string[]>>
-  >(
-    matchState: objectParam,
-    participants: directKey,
-    playerValue: nestedKey,
-    value: string
-  ) => {
-    const array = [matchState[participants][playerValue]][0];
-    const index = array.indexOf(value);
-    if (index !== -1) {
-      array.splice(index, 1);
-      setMatchState((current) => ({
-        ...current,
-        [participants]: {
-          ...current,
-          emails: array,
-        },
-      }));
-    }
-  };
-  const setPlayerValue = <
-    directKey extends keyof objectParam,
-    nestedKey extends keyof objectParam[directKey],
-    objectParam extends Record<directKey, Record<nestedKey, any>>
-  >(
-    matchState: objectParam,
-    participants: directKey,
-    playerValue: nestedKey,
-    event: any
-  ) => {
-    const value = event.target.value;
-    let players: string[] = [];
-    props.players.forEach((player) => {
-      players.push(player.email);
-    });
-    if (players.includes(value)) {
-      setMatchState((current) => ({
-        ...current,
-        [participants]: {
-          ...matchState[participants],
-          [playerValue]: [...matchState[participants][playerValue], value],
-        },
-      }));
-      const inputForm = document.getElementById(
-        `DataList${participants as string}`
-      ) as HTMLInputElement;
-      inputForm.value = '';
-    } else if (playerValue === 'numSetsWon') {
-      setMatchState((current) => ({
-        ...current,
-        [participants]: {
-          ...matchState[participants],
-          [playerValue]: value,
-        },
-      }));
-    }
-  };
-  const submitMatch = async (matchForSubmit: matchData) => {
-    await axios({
+  function submitMatch() {
+    axios({
       method: 'POST',
       url: 'https://api.ckal.dk/table-tennis/session',
       headers: { 'x-api-key': window.location.host === 'tabletennis.ckal.dk' ? 'hej' : '' },
-      data: matchForSubmit,
+      data: {
+        totalPoints: totalPoints,
+        participantsA: {
+          emails: emailsA,
+          numSetsWon: numSetsWonA,
+        },
+        participantsB: {
+          emails: emailsB,
+          numSetsWon: numSetsWonB,
+        },
+      },
     })
       .then(() => {
         props.reload(true);
@@ -110,7 +45,7 @@ export const Modal = (props: PlayerProps) => {
         props.reload(false);
         alertHidden(false);
       });
-  };
+  }
   return (
     <div className="mt-1">
       <button
@@ -132,23 +67,25 @@ export const Modal = (props: PlayerProps) => {
               >
                 <div
                   style={{ display: 'flex', alignItems: 'center' }}
-                  onClick={() => setMatchState({ ...matchState, totalPoints: 10 })}
+                  onClick={() => setTotalPoints(10)}
                 >
                   <input
                     type="checkbox"
                     style={{ marginRight: 8 }}
-                    checked={matchState.totalPoints === 10}
+                    checked={totalPoints === 10}
+                    onChange={() => setTotalPoints(10)}
                   />
                   To 5
                 </div>
                 <div
                   style={{ display: 'flex', alignItems: 'center' }}
-                  onClick={() => setMatchState({ ...matchState, totalPoints: 22 })}
+                  onClick={() => setTotalPoints(22)}
                 >
                   <input
                     type="checkbox"
                     style={{ marginRight: 8 }}
-                    checked={matchState.totalPoints === 22}
+                    checked={totalPoints === 22}
+                    onChange={() => setTotalPoints(22)}
                   />
                   To 11
                 </div>
@@ -160,19 +97,18 @@ export const Modal = (props: PlayerProps) => {
                   placeholder="Search player"
                   className="form-control mt-3 mb-3"
                   required
-                  disabled={matchState.participantsA.emails.length === 2}
-                  onChange={(event: any) => {
-                    setPlayerValue(matchState, 'participantsA', 'emails', event);
-                  }}
-                ></input>
+                  disabled={emailsA.length === 2}
+                  value=" "
+                  onChange={(event) => setEmailsA(emailsA.concat(event.target.value))}
+                />
                 <label htmlFor="floatingInput">Search Player</label>
               </div>
               <datalist id="datalistOptions">{listItems}</datalist>
               <ListRender
-                parsedArray={matchState.participantsA.emails}
+                parsedArray={emailsA}
                 uniqueIndex="A"
                 clickRemove={(playerFromChild: string) =>
-                  removeParticipant(matchState, 'participantsA', 'emails', playerFromChild)
+                  setEmailsA(emailsA.filter((e) => e !== playerFromChild))
                 }
               />
               <div className="form-floating mb-3">
@@ -182,10 +118,8 @@ export const Modal = (props: PlayerProps) => {
                   className="form-control mt-3 mb-3"
                   required
                   placeholder="Amount of won sets"
-                  onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                    setPlayerValue(matchState, 'participantsA', 'numSetsWon', event);
-                  }}
-                ></input>
+                  onChange={(event) => setNumSetsWonA(event.target.value)}
+                />
                 <label htmlFor="floatingInput">Amount of won sets</label>
               </div>
               <hr />
@@ -195,20 +129,19 @@ export const Modal = (props: PlayerProps) => {
                   className="form-control mt-3 mb-3"
                   list="datalistOptions"
                   id="DataListparticipantsB"
-                  disabled={matchState.participantsB.emails.length === 2}
+                  disabled={emailsB.length === 2}
                   placeholder="Search player"
-                  onChange={(event: any) => {
-                    setPlayerValue(matchState, 'participantsB', 'emails', event);
-                  }}
-                ></input>
+                  value=" "
+                  onChange={(event) => setEmailsB(emailsB.concat(event.target.value))}
+                />
                 <label htmlFor="floatingInput">Search Player</label>
               </div>
               <datalist id="datalistOptions">{listItems}</datalist>
               <ListRender
-                parsedArray={matchState.participantsB.emails}
+                parsedArray={emailsB}
                 uniqueIndex="B"
                 clickRemove={(playerFromChild: string) =>
-                  removeParticipant(matchState, 'participantsB', 'emails', playerFromChild)
+                  setEmailsB(emailsB.filter((e) => e !== playerFromChild))
                 }
               />
               <div className="form-floating mb-3">
@@ -217,10 +150,8 @@ export const Modal = (props: PlayerProps) => {
                   min="0"
                   placeholder="Amount of won sets"
                   className="form-control mt-3 mb-3"
-                  onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                    setPlayerValue(matchState, 'participantsB', 'numSetsWon', event);
-                  }}
-                ></input>
+                  onChange={(event) => setNumSetsWonB(event.target.value)}
+                />
                 <label htmlFor="floatingInput">Amount of won sets</label>
               </div>
               <div className="modal-footer">
@@ -233,7 +164,7 @@ export const Modal = (props: PlayerProps) => {
                 >
                   Close
                 </button>
-                <button onClick={() => submitMatch(matchState)} className="btn btn-primary">
+                <button onClick={submitMatch} className="btn btn-primary">
                   Submit
                 </button>
               </div>
@@ -243,4 +174,4 @@ export const Modal = (props: PlayerProps) => {
       </div>
     </div>
   );
-};
+}
