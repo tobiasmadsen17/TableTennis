@@ -28,11 +28,11 @@ export function Modal(props: PlayerProps) {
         totalPoints: totalPoints,
         participantsA: {
           emails: emailsA,
-          numSetsWon: numSetsWonA,
+          numSetsWon: Number(numSetsWonA),
         },
         participantsB: {
           emails: emailsB,
-          numSetsWon: numSetsWonB,
+          numSetsWon: Number(numSetsWonB),
         },
       },
     })
