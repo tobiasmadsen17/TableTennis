@@ -10,6 +10,8 @@ export function Modal(props: PlayerProps) {
   const [numSetsWonA, setNumSetsWonA] = useState('');
   const [numSetsWonB, setNumSetsWonB] = useState('');
   const [totalPoints, setTotalPoints] = useState(22);
+  const [searchValueA, setSearchValueA] = useState('');
+  const [searchValueB, setSearchValueB] = useState('');
 
   const listItems = props.players.map((value: Player) => (
     <option key={value.email} value={value.email}>
@@ -103,8 +105,14 @@ export function Modal(props: PlayerProps) {
                   className="form-control mt-3 mb-3"
                   required
                   disabled={emailsA.length === 2}
-                  value=" "
-                  onChange={(event) => setEmailsA(emailsA.concat(event.target.value))}
+                  value={searchValueA}
+                  onChange={(event) => {
+                    setSearchValueA(event.target.value);
+                    if (props.players.find((p) => p.email === event.target.value)) {
+                      setEmailsA(emailsA.concat(event.target.value));
+                      setSearchValueA('');
+                    }
+                  }}
                 />
                 <label htmlFor="floatingInput">Search Player</label>
               </div>
@@ -136,8 +144,14 @@ export function Modal(props: PlayerProps) {
                   id="DataListparticipantsB"
                   disabled={emailsB.length === 2}
                   placeholder="Search player"
-                  value=" "
-                  onChange={(event) => setEmailsB(emailsB.concat(event.target.value))}
+                  value={searchValueB}
+                  onChange={(event) => {
+                    setSearchValueB(event.target.value);
+                    if (props.players.find((p) => p.email === event.target.value)) {
+                      setEmailsB(emailsB.concat(event.target.value));
+                      setSearchValueB('');
+                    }
+                  }}
                 />
                 <label htmlFor="floatingInput">Search Player</label>
               </div>
