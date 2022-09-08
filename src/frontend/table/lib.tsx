@@ -4,11 +4,11 @@ export interface Player {
   _id: string;
   email: string;
   name: string;
-  ranks: {
-    single: string;
-    double: string;
-  };
+  ranks: { [matchType in MatchType]: string };
+  matchesPlayed: number;
 }
+
+export type MatchType = 'single' | 'double';
 
 export interface PlayerProps {
   players: Player[];
@@ -37,28 +37,30 @@ export const BasicColumns: SuperTableColumn<Player>[] = [
   {
     title: 'Player',
     dataIndex: 'name',
+    render: (val: string | undefined, row) => val || row.email,
     width: 'auto',
   },
   {
     title: 'Single',
     dataIndex: 'ranks.single',
     sorted: 'descending',
-    sorter: (a, b) => sortRank(a.ranks.single, b.ranks.single),
+    sorter: (a, b) => sortRank(a, b, 'single'),
   },
   {
     title: 'Double',
     dataIndex: 'ranks.double',
-    sorter: (a, b) => sortRank(a.ranks.double, b.ranks.double),
+    sorter: (a, b) => sortRank(a, b, 'double'),
   },
   {
-    title: 'Matches played',
+    title: 'Matches',
     dataIndex: 'matchesPlayed',
+    align: 'center',
   },
 ];
 
-function sortRank(a: string, b: string) {
-  const [divisonA, tierA, uncertaintyA] = a.split(' ');
-  const [divisonB, tierB, uncertaintyB] = b.split(' ');
+function sortRank(a: Player, b: Player, matchType: MatchType) {
+  const [divisonA, tierA, uncertaintyA] = a.ranks[matchType].split(' ');
+  const [divisonB, tierB, uncertaintyB] = b.ranks[matchType].split(' ');
 
   const divisionToInt: { [div in string]: number } = {
     Bronze: 0,
@@ -82,5 +84,9 @@ function sortRank(a: string, b: string) {
     return (divisionToInt[divisonA] || 0) - (divisionToInt[divisonB] || 0);
   }
 
-  return Number(tierA) - Number(tierB);
+  if (Number(tierA) !== Number(tierB)) {
+    return Number(tierA) - Number(tierB);
+  }
+
+  return a.matchesPlayed - b.matchesPlayed;
 }
