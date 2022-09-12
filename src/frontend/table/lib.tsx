@@ -29,12 +29,6 @@ export interface Credentials extends AWS.CognitoIdentityServiceProvider.Authenti
 
 export const BasicColumns: SuperTableColumn<Player>[] = [
   {
-    title: 'Rank',
-    dataIndex: '',
-    render: (_, __, index) => index + 1,
-  },
-
-  {
     title: 'Player',
     dataIndex: 'name',
     render: (val: string | undefined, row) => val || row.email,
