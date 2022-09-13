@@ -5,6 +5,7 @@ import axios from 'axios';
 import { Collapse } from '../Collapse';
 import { BasicColumns, UserInfo } from './lib';
 import { clearCredentials } from '../../credentialsHandler';
+import { HistoryList } from '../HistoryList';
 
 interface PaginationExampleProps {
   userInfo: UserInfo;
@@ -39,13 +40,8 @@ export const PaginationExample = (props: PaginationExampleProps) => {
 
   return (
     <div className="container">
-      <div className="row mt-5">
-        <div className="col-lg-12 col-md-auto">
-          <h6 className="display-6">Super Table Tennis Ranking</h6>
-        </div>
-      </div>
       <div className="row">
-        <div className="col-lg-12 col-md-auto">
+        <div className="col-lg-12 col-md-auto" style={{ marginTop: 8 }}>
           <SuperTable
             rows={players}
             columns={BasicColumns}
@@ -53,8 +49,25 @@ export const PaginationExample = (props: PaginationExampleProps) => {
             removeInfoText
             removeSearch
           />
-          <hr />
         </div>
+      </div>
+      <div style={{ display: 'flex', justifyContent: 'center', marginTop: 12 }}>
+        <Modal
+          players={players}
+          matchType="Register"
+          reload={updateTable}
+          ownEmail={props.userInfo.email}
+        />
+      </div>
+      <div
+        style={{
+          margin: '8px -20px 0',
+          background: '#eae9e9',
+          borderTop: '1px solid lightgray',
+          borderBottom: '1px solid lightgray',
+        }}
+      >
+        <HistoryList players={players} />
       </div>
       <div className="row">
         <div className="col-lg-6 col-md-auto">

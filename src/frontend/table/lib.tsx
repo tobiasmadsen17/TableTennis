@@ -84,3 +84,40 @@ function sortRank(a: Player, b: Player, matchType: MatchType) {
 
   return a.matchesPlayed - b.matchesPlayed;
 }
+
+export function prettifyTimestamp(timestamp: number) {
+  const date = new Date(timestamp);
+
+  const hours = (date.getHours() - 2).toString().padStart(2, '0');
+  const minutes = date.getMinutes().toString().padStart(2, '0');
+  const seconds = date.getSeconds().toString().padStart(2, '0');
+
+  const day = date.getDate();
+  const month = date.getMonth() + 1;
+  const year = date.getFullYear().toString().slice(2);
+
+  return `${hours}:${minutes}:${seconds} ${day}/${month}-${year}`;
+}
+
+export interface Session {
+  _id: string;
+  matchType: 'single' | 'double';
+  totalPoints: 10 | 22;
+  gameOfMultipleSets: boolean;
+  participantsA: Participants;
+  participantsB: Participants;
+  ratingResults: RatingResult[];
+  timestamp: number;
+  prettyDate: string;
+}
+
+export interface Participants {
+  emails: string[];
+  numSetsWon: number;
+}
+
+export interface RatingResult {
+  email: string;
+  delta: number;
+  newRating: number;
+}
