@@ -7,7 +7,7 @@ import { BasicColumns, UserInfo } from './lib';
 import { clearCredentials } from '../../credentialsHandler';
 import { HistoryList } from '../HistoryList';
 import { MatchInfoModal } from '../MatchInfoModal';
-
+import 'bootstrap-icons/font/bootstrap-icons.css';
 interface PaginationExampleProps {
   userInfo: UserInfo;
   clearUserInfo(): void;
@@ -52,25 +52,33 @@ export const PaginationExample = (props: PaginationExampleProps) => {
           />
         </div>
       </div>
-      <div style={{ display: 'flex', justifyContent: 'space-around', marginTop: 12 }}>
-        <Modal
-          players={players}
-          matchType="Register"
-          reload={updateTable}
-          ownEmail={props.userInfo.email}
-        />
-        <MatchInfoModal players={players} ownEmail={props.userInfo.email} />
+      <div className="row">
+        <div className="col-lg-12 col-md-auto" style={{ marginTop: 8 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-around', marginTop: 12 }}>
+            <Modal
+              players={players}
+              matchType="Register"
+              reload={updateTable}
+              ownEmail={props.userInfo.email}
+            />
+            <MatchInfoModal players={players} ownEmail={props.userInfo.email} />
+          </div>
+        </div>
       </div>
-      <div
-        style={{
-          margin: '8px -20px 0',
-          background: '#eae9e9',
-          borderTop: '1px solid lightgray',
-          borderBottom: '1px solid lightgray',
-        }}
-      >
-        <HistoryList players={players} />
+      <div className="row">
+        <div className="col-lg-12 col-md-auto" style={{ marginTop: 8 }}>
+          <div
+            style={{
+              background: '#eae9e9',
+              borderTop: '1px solid lightgray',
+              borderBottom: '1px solid lightgray',
+            }}
+          >
+            <HistoryList players={players} />
+          </div>
+        </div>
       </div>
+      <hr />
       <div className="row">
         <div className="col-lg-6 col-md-auto">
           <Collapse
@@ -99,17 +107,15 @@ export const PaginationExample = (props: PaginationExampleProps) => {
             id="right"
           />
         </div>
-      </div>
-      <div className="row">
-        <div>
+        <div className="col-md-auto">
           <button
-            className="btn btn-outline-primary mt-5 mb-3"
+            className="btn btn-outline-primary mt-3 mb-3"
             onClick={async () => {
               await clearCredentials();
               props.clearUserInfo();
             }}
           >
-            Logout
+            Sign out <i className="bi bi-door-open-fill"></i>
           </button>
         </div>
       </div>
