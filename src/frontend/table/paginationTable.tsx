@@ -99,7 +99,7 @@ export const PaginationExample = (props: PaginationExampleProps) => {
       </div>
       <hr />
       <div className="row">
-        <div className="col-lg-12 col-md-auto" style={{ marginTop: 8 }}>
+        <div className="col-lg-12 col-md-auto mb-3" style={{ marginTop: 8 }}>
           <div
             style={{
               background: '#eae9e9',
