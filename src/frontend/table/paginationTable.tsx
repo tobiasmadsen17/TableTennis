@@ -6,6 +6,7 @@ import { Collapse } from '../Collapse';
 import { BasicColumns, UserInfo } from './lib';
 import { clearCredentials } from '../../credentialsHandler';
 import { HistoryList } from '../HistoryList';
+import { MatchInfoModal } from '../MatchInfoModal';
 
 interface PaginationExampleProps {
   userInfo: UserInfo;
@@ -51,13 +52,14 @@ export const PaginationExample = (props: PaginationExampleProps) => {
           />
         </div>
       </div>
-      <div style={{ display: 'flex', justifyContent: 'center', marginTop: 12 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-around', marginTop: 12 }}>
         <Modal
           players={players}
           matchType="Register"
           reload={updateTable}
           ownEmail={props.userInfo.email}
         />
+        <MatchInfoModal players={players} ownEmail={props.userInfo.email} />
       </div>
       <div
         style={{
