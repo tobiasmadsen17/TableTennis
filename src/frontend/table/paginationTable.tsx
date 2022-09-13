@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { Modal } from '../Modal';
 import axios from 'axios';
 import { Collapse } from '../Collapse';
-import { BasicColumns, UserInfo } from './lib';
+import { BasicColumns, Session, UserInfo } from './lib';
 import { clearCredentials } from '../../credentialsHandler';
 import { HistoryList } from '../HistoryList';
 import { MatchInfoModal } from '../MatchInfoModal';
@@ -15,10 +15,29 @@ interface PaginationExampleProps {
 
 export const PaginationExample = (props: PaginationExampleProps) => {
   const [players, setPlayers] = useState([]);
+  const [sessions, setSessions] = useState<Session[]>([]);
+
+  useEffect(() => {
+    fetchSessions(true);
+  }, []);
 
   const updateTable = (reload: boolean) => {
     if (reload === true) fetchPlayers();
   };
+
+  function fetchSessions(reload: boolean) {
+    if (!reload) return;
+    axios({
+      method: 'GET',
+      url: 'https://api.ckal.dk/table-tennis/sessions',
+      headers: { 'x-api-key': window.location.host === 'tabletennis.ckal.dk' ? 'hej' : '' },
+    }).then((res) => setSessions(res.data.reverse()));
+  }
+
+  function refresh(reload: boolean) {
+    updateTable(reload);
+    fetchSessions(reload);
+  }
 
   const fetchPlayers = async () => {
     await axios({
@@ -56,7 +75,7 @@ export const PaginationExample = (props: PaginationExampleProps) => {
         <Modal
           players={players}
           matchType="Register"
-          reload={updateTable}
+          reload={refresh}
           ownEmail={props.userInfo.email}
         />
         <MatchInfoModal players={players} ownEmail={props.userInfo.email} />
@@ -69,7 +88,7 @@ export const PaginationExample = (props: PaginationExampleProps) => {
           borderBottom: '1px solid lightgray',
         }}
       >
-        <HistoryList players={players} />
+        <HistoryList players={players} sessions={sessions} />
       </div>
       <div className="row">
         <div className="col-lg-6 col-md-auto">

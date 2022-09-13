@@ -1,22 +1,11 @@
-import axios from 'axios';
-import { useEffect, useState } from 'react';
 import { prettifyTimestamp, Session } from './table/lib';
 
 interface HistoryListProps {
   players: any[];
+  sessions: Session[];
 }
 
 export function HistoryList(props: HistoryListProps) {
-  const [sessions, setSessions] = useState<Session[]>([]);
-
-  useEffect(() => {
-    axios({
-      method: 'GET',
-      url: 'https://api.ckal.dk/table-tennis/sessions',
-      headers: { 'x-api-key': window.location.host === 'tabletennis.ckal.dk' ? 'hej' : '' },
-    }).then((res) => setSessions(res.data.reverse()));
-  }, []);
-
   return (
     <div
       style={{
@@ -27,7 +16,7 @@ export function HistoryList(props: HistoryListProps) {
         paddingTop: 8,
       }}
     >
-      {sessions.map((s) => (
+      {props.sessions.map((s) => (
         <div
           key={s._id}
           style={{
