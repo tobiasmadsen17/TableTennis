@@ -27,6 +27,12 @@ export interface Credentials extends AWS.CognitoIdentityServiceProvider.Authenti
   ExpirationTimestamp: number;
 }
 
+function rankRender(val: string) {
+  const [rank, tier, uncertainty] = val.split(' ');
+
+  return rank[0] + tier + (uncertainty || '');
+}
+
 export const BasicColumns: SuperTableColumn<Player>[] = [
   {
     title: 'Player',
@@ -35,20 +41,23 @@ export const BasicColumns: SuperTableColumn<Player>[] = [
     width: 'auto',
   },
   {
-    title: 'Single',
+    title: '1v1',
     dataIndex: 'ranks.single',
     sorted: 'descending',
     sorter: (a, b) => sortRank(a, b, 'single'),
+    render: rankRender,
   },
   {
-    title: 'Double',
+    title: '2v2',
     dataIndex: 'ranks.double',
     sorter: (a, b) => sortRank(a, b, 'double'),
+    render: rankRender,
   },
   {
-    title: 'Matches',
+    title: '#',
     dataIndex: 'matchesPlayed',
     align: 'center',
+    titleAlign: 'center',
   },
 ];
 
