@@ -55,13 +55,13 @@ export function Modal(props: PlayerProps) {
   }
   return (
     <div className="mt-1">
-      <button
-        className="btn btn-outline-primary"
+      <a
+        className="nav-link text-white"
         data-bs-toggle="modal"
         data-bs-target={'#' + props.matchType}
       >
         {props.matchType} Match
-      </button>
+      </a>
       <div className="modal fade" id={props.matchType} aria-hidden="true">
         <div className="modal-dialog modal-dialog-centered">
           <div className="modal-content">

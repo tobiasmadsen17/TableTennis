@@ -56,13 +56,9 @@ export function MatchInfoModal(props: MatchInfoModalProps) {
   }
   return (
     <div className="mt-1">
-      <button
-        className="btn btn-outline-primary"
-        data-bs-toggle="modal"
-        data-bs-target="#match-info-modal"
-      >
+      <a className="nav-link text-white" data-bs-toggle="modal" data-bs-target="#match-info-modal">
         Calculate point targets
-      </button>
+      </a>
       <div className="modal fade" id="match-info-modal" aria-hidden="true">
         <div className="modal-dialog modal-dialog-centered">
           <div className="modal-content">
