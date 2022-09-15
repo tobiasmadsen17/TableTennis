@@ -30,7 +30,65 @@ export interface Credentials extends AWS.CognitoIdentityServiceProvider.Authenti
 function rankRender(val: string) {
   const [rank, tier, uncertainty] = val.split(' ');
 
-  return rank[0] + tier + (uncertainty || '');
+  return (
+    <div>
+      <div
+        style={{
+          textAlign: 'center',
+          fontWeight: 'bold',
+          color:
+            rank[0] === 'B'
+              ? '#d86800'
+              : rank[0] === 'S'
+              ? '#727272'
+              : rank[0] === 'G'
+              ? '#ffc200'
+              : rank[0] === 'P'
+              ? 'red'
+              : '#60ddff',
+        }}
+      >
+        {rank[0] + tier}
+      </div>
+      {uncertainty && (
+        <div style={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+          <div
+            style={{
+              height: 4,
+              width: 4,
+              background: uncertainty.length > 0 ? '#60d0ff' : 'lightgray',
+            }}
+          />
+          <div
+            style={{
+              height: 4,
+              width: 4,
+              background: uncertainty.length > 1 ? '#60d0ff' : 'lightgray',
+            }}
+          />
+          <div
+            style={{
+              height: 4,
+              width: 4,
+              background: uncertainty.length > 2 ? '#60d0ff' : 'lightgray',
+            }}
+          />
+          <div
+            style={{
+              fontSize: 10,
+              fontWeight: 'bold',
+              marginLeft: 2,
+              lineHeight: 0,
+              color: 'gray',
+              marginTop: -1,
+            }}
+          >
+            ?
+          </div>
+        </div>
+      )}
+    </div>
+  );
 }
 
 export const BasicColumns: SuperTableColumn<Player>[] = [

@@ -45,7 +45,7 @@ export const PaginationExample = (props: PaginationExampleProps) => {
       method: 'GET',
       url: 'https://api.ckal.dk/table-tennis/players',
       headers: {
-        'x-api-key': window.location.host === 'tabletennis.ckal.dk' ? 'hej' : '',
+        'x-api-key': window.location.host !== 'tabletennis.ckal.dk' ? 'hej' : '',
       },
     })
       .then((response) => {
@@ -80,7 +80,7 @@ export const PaginationExample = (props: PaginationExampleProps) => {
                 <Modal
                   players={players}
                   matchType="Register"
-                  reload={updateTable}
+                  reload={(reload: boolean) => refresh(reload)}
                   ownEmail={props.userInfo.email}
                 />
               </li>
@@ -126,7 +126,7 @@ export const PaginationExample = (props: PaginationExampleProps) => {
               borderBottom: '1px solid lightgray',
             }}
           >
-            <HistoryList players={players} />
+            <HistoryList players={players} sessions={sessions} />
           </div>
         </div>
       </div>
