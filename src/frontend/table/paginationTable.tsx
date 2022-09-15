@@ -1,13 +1,14 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import { SuperTable } from './supertable/superTable';
 import { useEffect, useState } from 'react';
 import { Modal } from '../Modal';
 import axios from 'axios';
-import { Collapse } from '../Collapse';
 import { BasicColumns, Session, UserInfo } from './lib';
 import { clearCredentials } from '../../credentialsHandler';
 import { HistoryList } from '../HistoryList';
 import { MatchInfoModal } from '../MatchInfoModal';
-
+import { RankedDescriptionModal } from '../RankedDescriptionModal';
+import 'bootstrap-icons/font/bootstrap-icons.css';
 interface PaginationExampleProps {
   userInfo: UserInfo;
   clearUserInfo(): void;
@@ -60,6 +61,50 @@ export const PaginationExample = (props: PaginationExampleProps) => {
 
   return (
     <div className="container">
+      <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div className="container-fluid">
+          <button
+            className="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNavDarkDropdown"
+            aria-controls="navbarNavDarkDropdown"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span className="navbar-toggler-icon"></span>
+          </button>
+          <div className="collapse navbar-collapse" id="navbarNavDarkDropdown">
+            <ul className="navbar-nav">
+              <li>
+                <Modal
+                  players={players}
+                  matchType="Register"
+                  reload={updateTable}
+                  ownEmail={props.userInfo.email}
+                />
+              </li>
+              <li>
+                <MatchInfoModal players={players} ownEmail={props.userInfo.email} />
+              </li>
+              <li>
+                <RankedDescriptionModal />
+              </li>
+              <li>
+                <a
+                  className="nav-link mt-1 text-white"
+                  onClick={async () => {
+                    await clearCredentials();
+                    props.clearUserInfo();
+                  }}
+                >
+                  Sign out <i className="bi bi-door-open-fill"></i>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
       <div className="row">
         <div className="col-lg-12 col-md-auto" style={{ marginTop: 8 }}>
           <SuperTable
@@ -71,65 +116,18 @@ export const PaginationExample = (props: PaginationExampleProps) => {
           />
         </div>
       </div>
-      <div style={{ display: 'flex', justifyContent: 'space-around', marginTop: 12 }}>
-        <Modal
-          players={players}
-          matchType="Register"
-          reload={refresh}
-          ownEmail={props.userInfo.email}
-        />
-        <MatchInfoModal players={players} ownEmail={props.userInfo.email} />
-      </div>
-      <div
-        style={{
-          margin: '8px -20px 0',
-          background: '#eae9e9',
-          borderTop: '1px solid lightgray',
-          borderBottom: '1px solid lightgray',
-        }}
-      >
-        <HistoryList players={players} sessions={sessions} />
-      </div>
+      <hr />
       <div className="row">
-        <div className="col-lg-6 col-md-auto">
-          <Collapse
-            header="Played a match?"
-            message="Register the results here and climb the ladder"
-            subheader="Wanna join the league?"
-            submessage="Head over and create a user!"
-            id="left"
-            linkHref="https://www.CKAL.dk"
-            modal={
-              <Modal
-                players={players}
-                matchType="Register"
-                reload={updateTable}
-                ownEmail={props.userInfo.email}
-              />
-            }
-          />
-        </div>
-        <div className="col-lg-6 col-md-auto">
-          <Collapse
-            header="Ranking Description"
-            message="Registering games affects your rating. Longer games results in higher wins and losses of rating. Divisions are (lowest to highest): Bronze (B), Silver (S), Gold (G), Platinum (P), Diamond (D). Tiers are 1 through 5. Your rating affect how many points you need to win the game versus your opponent - consult <this> to see your point cap versus different opponents. The more you play, the less uncertain the system is about your rank."
-            subheader="GitHub Repo"
-            submessage="GitHub Repo"
-            id="right"
-          />
-        </div>
-      </div>
-      <div className="row">
-        <div>
-          <button
-            className="btn btn-outline-primary mt-5 mb-3"
-            onClick={async () => {
-              await clearCredentials();
-              props.clearUserInfo();
+        <div className="col-lg-12 col-md-auto mb-3" style={{ marginTop: 8 }}>
+          <div
+            style={{
+              background: '#eae9e9',
+              borderTop: '1px solid lightgray',
+              borderBottom: '1px solid lightgray',
             }}
           >
-            Logout
-          </button>
+            <HistoryList players={players} />
+          </div>
         </div>
       </div>
     </div>
