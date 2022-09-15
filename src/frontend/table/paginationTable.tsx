@@ -45,7 +45,7 @@ export const PaginationExample = (props: PaginationExampleProps) => {
       method: 'GET',
       url: 'https://api.ckal.dk/table-tennis/players',
       headers: {
-        'x-api-key': window.location.host !== 'tabletennis.ckal.dk' ? 'hej' : '',
+        'x-api-key': window.location.host === 'tabletennis.ckal.dk' ? 'hej' : '',
       },
     })
       .then((response) => {
