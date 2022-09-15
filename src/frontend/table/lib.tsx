@@ -56,21 +56,21 @@ function rankRender(val: string) {
             style={{
               height: 4,
               width: 4,
-              background: uncertainty.length > 0 ? '#60d0ff' : 'lightgray',
+              background: uncertainty.length > 0 ? '#60d0ff' : '#e9e9e9',
             }}
           />
           <div
             style={{
               height: 4,
               width: 4,
-              background: uncertainty.length > 1 ? '#60d0ff' : 'lightgray',
+              background: uncertainty.length > 1 ? '#60d0ff' : '#e9e9e9',
             }}
           />
           <div
             style={{
               height: 4,
               width: 4,
-              background: uncertainty.length > 2 ? '#60d0ff' : 'lightgray',
+              background: uncertainty.length > 2 ? '#60d0ff' : '#e9e9e9',
             }}
           />
           <div
