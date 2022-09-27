@@ -44,7 +44,7 @@ function rankRender(val: string) {
               : rank[0] === 'G'
               ? '#ffc200'
               : rank[0] === 'P'
-              ? 'red'
+              ? '#a4d2d6'
               : '#60ddff',
         }}
       >
@@ -155,7 +155,7 @@ function sortRank(a: Player, b: Player, matchType: MatchType) {
 export function prettifyTimestamp(timestamp: number) {
   const date = new Date(timestamp);
 
-  const hours = (date.getHours() - 2).toString().padStart(2, '0');
+  const hours = date.getHours().toString().padStart(2, '0');
   const minutes = date.getMinutes().toString().padStart(2, '0');
   const seconds = date.getSeconds().toString().padStart(2, '0');
 
