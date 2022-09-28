@@ -91,7 +91,37 @@ function rankRender(val: string) {
   );
 }
 
-export const BasicColumns: SuperTableColumn<Player>[] = [
+export function getPlayerColumnsSingle(email: string): SuperTableColumn<Player>[] {
+  return [
+    {
+      title: 'Player',
+      dataIndex: 'name',
+      render: (val: string | undefined, row) => val || row.email,
+      width: 'auto',
+    },
+    {
+      title: 'Rank',
+      dataIndex: 'ranks.single',
+      sorted: 'descending',
+      sorter: (a, b) => sortRank(a, b, 'single'),
+      render: rankRender,
+    },
+    {
+      title: 'Cap 5',
+      dataIndex: 'pointCaps.10',
+      align: 'center',
+      render: (val: any, row) => (row.email === email ? '-' : val.self + '-' + val.opponent),
+    },
+    {
+      title: 'Cap 11',
+      dataIndex: 'pointCaps.22',
+      align: 'center',
+      render: (val: any, row) => (row.email === email ? '-' : val.self + '-' + val.opponent),
+    },
+  ];
+}
+
+export const PlayerColumnsDouble: SuperTableColumn<Player>[] = [
   {
     title: 'Player',
     dataIndex: 'name',
@@ -99,23 +129,11 @@ export const BasicColumns: SuperTableColumn<Player>[] = [
     width: 'auto',
   },
   {
-    title: '1v1',
-    dataIndex: 'ranks.single',
-    sorted: 'descending',
-    sorter: (a, b) => sortRank(a, b, 'single'),
-    render: rankRender,
-  },
-  {
-    title: '2v2',
+    title: 'Rank',
     dataIndex: 'ranks.double',
+    sorted: 'descending',
     sorter: (a, b) => sortRank(a, b, 'double'),
     render: rankRender,
-  },
-  {
-    title: '#',
-    dataIndex: 'matchesPlayed',
-    align: 'center',
-    titleAlign: 'center',
   },
 ];
 
